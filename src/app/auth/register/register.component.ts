@@ -16,24 +16,24 @@ import { Router } from "@angular/router";
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule],
     styleUrls: ['./register.component.css'],
     template: `<main lang="he" dir="rtl">
-        <h2>הרשמה למערכת</h2><br>
+        <h2>הרשמה למערכת</h2>
         <form [formGroup]="registrationForm">
             <mat-form-field>
                 <input formControlName="firstName" matInput placeholder="שם פרטי">
-            </mat-form-field><br>
+            </mat-form-field>
             <mat-form-field>
                 <input formControlName="lastName" matInput placeholder="שם משפחה">
-            </mat-form-field><br>
+            </mat-form-field>
             <mat-form-field>
                 <input formControlName="username" matInput placeholder="שם משתמש">
-            </mat-form-field><br>
+            </mat-form-field>
             <mat-form-field>
                 <input formControlName="password" type="password" matInput placeholder="סיסמה">
-            </mat-form-field><br>
+            </mat-form-field>
             <mat-form-field>
                 <input formControlName="passwordConfirming" type="password" matInput placeholder="אישור סיסמה">
-            </mat-form-field><br>
-            <button mat-stroked-button type="button" (click)="register()">הירשם</button><br>
+            </mat-form-field>
+            <button mat-stroked-button type="button" (click)="register()">הירשם</button>
             <div class="messages">
                 <label class="confirm-message" *ngIf="hasRegistrationSucceeded === true">נרשמת בהצלחה למערכת!<br><br>חוזרים למסך ההתחברות</label>
                 <label class="existed-username-message" *ngIf="hasRegistrationSucceeded === false">שם משתמש כבר קיים במערכת</label>
@@ -82,12 +82,13 @@ export class RegisterComponent {
                 this.isFormValid = true;
                 this.doPasswordsMatch = true;
 
-                const user: User = this.registrationForm.value;
+                const { passwordConfirming, ...plainedUser} = this.registrationForm.value
+                const user: User = plainedUser;
                 this.store.dispatch(AuthActions.registrationRequest({user}));
 
                 setTimeout(() => {
                     this.router.navigate(['/login']);
-                }, 3000);
+                }, 1500);
             }
             else {
                 this.doPasswordsMatch = false;
