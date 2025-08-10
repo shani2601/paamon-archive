@@ -20,7 +20,7 @@ export class AuthEffects {
         map((user) => {
           return (this.authService.login(user)) ? 
               AuthActions.loginSuccess({ user }) :
-              AuthActions.loginFailure({ error: 'שגיאה בהתחברות' });
+              AuthActions.loginFailure({ error: 'אחד או יותר מהפרטים שהזנת שגויים' });
           }
       )
     )

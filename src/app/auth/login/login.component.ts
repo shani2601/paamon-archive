@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { Store } from "@ngrx/store";
 import * as AuthActions from "../../state/auth/auth.actions";
 import { User } from "../../models/user.model";
 import { Actions, ofType } from "@ngrx/effects";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
     standalone: true,
@@ -26,7 +27,7 @@ import { Actions, ofType } from "@ngrx/effects";
               <input formControlName="password" matInput placeholder="סיסמה">
             </mat-form-field>
 
-            <button mat-stroked-button class="login-btn" (click)="login(); openAppPage()">התחבר</button>
+            <button mat-stroked-button class="login-btn" (click)="login()">התחבר</button>
             <label class="login-error">{{ loginError }}</label>
         </form>
 
@@ -34,10 +35,11 @@ import { Actions, ofType } from "@ngrx/effects";
         <button mat-stroked-button class="register-btn" (click)="openRegisterPage()">הרשמה</button>
     </main>`
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy{
+  private destroy$ = new Subject<void>();
+
   private store = inject(Store);
   loginForm: FormGroup;
-  hasLoginSucceded: boolean | undefined;
   loginError: string | undefined;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private actions$: Actions) {
@@ -46,21 +48,25 @@ export class LoginComponent {
       password: ['', Validators.required]
     });
 
-    this.actions$.pipe(ofType(AuthActions.loginSuccess, AuthActions.loginFailure)).subscribe((action) => {
-        if (action.type === AuthActions.loginSuccess.type) {
-            this.hasLoginSucceded = true;
-                    }
-        else if (action.type === AuthActions.loginFailure.type) {
-            this.hasLoginSucceded = false;
-            this.loginError = action.error;
-        }
-    });
+    this.actions$.pipe(ofType(AuthActions.loginSuccess), takeUntil(this.destroy$))
+      .subscribe(() => this.openAppPage());
+
+    this.actions$.pipe(ofType(AuthActions.loginFailure), takeUntil(this.destroy$))
+      .subscribe(action => this.loginError = action.error);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   login() {
     if (this.loginForm.valid) {
       const user: User = this.loginForm.value;
       this.store.dispatch(AuthActions.loginRequest({user}));
+    }
+    else {
+      this.loginError = "יש למלא את כל השדות";
     }
   }
 
