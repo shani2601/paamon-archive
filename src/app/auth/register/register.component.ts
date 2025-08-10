@@ -77,8 +77,14 @@ export class RegisterComponent {
     }
 
     register() {
-        if (this.registrationForm.valid) {
-            if (this.registrationForm.value.password === this.registrationForm.value.passwordConfirmation) {
+        if (!(this.registrationForm.valid)) {
+            this.isFormValid = false;
+        }
+        else {
+            if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+                this.doPasswordsMatch = false;
+            }
+            else {
                 this.isFormValid = true;
                 this.doPasswordsMatch = true;
 
@@ -90,12 +96,6 @@ export class RegisterComponent {
                     this.router.navigate(['/login']);
                 }, 1500);
             }
-            else {
-                this.doPasswordsMatch = false;
-            }
-        }
-        else {
-            this.isFormValid = false;
         }
     }
 
