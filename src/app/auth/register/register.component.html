@@ -1,4 +1,4 @@
-`<main lang="he" dir="rtl">
+`<main>
     <h2>הרשמה למערכת</h2>
     <form [formGroup]="registrationForm">
         <mat-form-field>
@@ -22,6 +22,6 @@
 
     <div class="already-have-user">
         <label class="have-user-title">יש לך משתמש?</label>
-        <button mat-stroked-button class="login-btn" type="button" (click)="openLoginPage()">התחבר</button>
+        <button mat-stroked-button class="login-btn" type="button" [disabled]="isDisabled" (click)="openLoginPage()">התחבר</button>
     </div>
 </main>`

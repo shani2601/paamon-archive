@@ -24,6 +24,7 @@ export class RegisterComponent implements OnDestroy {
   private store = inject(Store);
   registrationForm: FormGroup;
   registrationMessage: string | undefined;
+  isDisabled = false;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router) {
     this.registrationForm = this.formBuilder.group({
@@ -65,6 +66,7 @@ export class RegisterComponent implements OnDestroy {
         const user: User = plainedUser;
         this.store.dispatch(AuthActions.registrationRequest({ user }));
 
+        this.isDisabled = true;
         this.registrationMessage = "נרשמת בהצלחה למערכת!\n\nחוזרים למסך ההתחברות";
       }
     }
