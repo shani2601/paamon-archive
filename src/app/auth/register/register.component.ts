@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { User } from '../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Actions, ofType } from "@ngrx/effects";
 import { Router } from "@angular/router";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
     standalone: true,
@@ -34,12 +35,7 @@ import { Router } from "@angular/router";
                 <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
             </mat-form-field>
             <button mat-stroked-button type="button" (click)="register()">הירשם</button>
-            <div class="messages">
-                <label class="confirm-message" *ngIf="hasRegistrationSucceeded === true">נרשמת בהצלחה למערכת!<br><br>חוזרים למסך ההתחברות</label>
-                <label class="existed-username-message" *ngIf="hasRegistrationSucceeded === false">שם משתמש כבר קיים במערכת</label>
-                <label class="missing-fields-message" *ngIf="isFormValid === false">יש למלא את כל השדות</label>
-                <label class="unmatched-passwords-message" *ngIf="doPasswordsMatch === false">סיסמאות לא תואמות</label>
-            </div>
+            <label class="registration-message">{{ registrationMessage }}</label>
         </form>
 
         <div class="already-have-user">
@@ -48,58 +44,59 @@ import { Router } from "@angular/router";
         </div>
     </main>`
 })
-export class RegisterComponent {
-    private store = inject(Store);
+export class RegisterComponent implements OnDestroy {
+  private onDestroy$ = new Subject<void>();
 
-    hasRegistrationSucceeded: boolean | undefined;
-    isFormValid: boolean | undefined;
-    doPasswordsMatch: boolean | undefined;
+  private store = inject(Store);
+  registrationForm: FormGroup;
+  registrationMessage: string | undefined;
 
-    registrationForm: FormGroup;
+  constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router) {
+    this.registrationForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      passwordConfirmation: ['', Validators.required],
+    });
 
-    constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router) {
-        this.registrationForm = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            username: ['', Validators.required],
-            password: ['', Validators.required],
-            passwordConfirmation: ['', Validators.required]
-        });
+    this.actions$
+      .pipe(ofType(AuthActions.registrationSuccess), takeUntil(this.onDestroy$))
+      .subscribe(() => {
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      });
 
-        this.actions$.pipe(ofType(AuthActions.registrationSuccess, AuthActions.registrationFailure)).subscribe((action) => {
-            if (action.type === AuthActions.registrationSuccess.type) {
-                this.hasRegistrationSucceeded = true;
-            }
-            else if (action.type === AuthActions.registrationFailure.type) {
-                this.hasRegistrationSucceeded = false;
-            }
-        });
+    this.actions$
+      .pipe(ofType(AuthActions.registrationFailure), takeUntil(this.onDestroy$))
+      .subscribe((action) => (this.registrationMessage = action.error));
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  register() {
+    if (!this.registrationForm.valid) {
+      this.registrationMessage = "יש למלא את כל השדות";
     }
+    else {
+      if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+        this.registrationMessage = "סיסמאות לא תואמות";
+      }
+      else {
+        const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
+        const user: User = plainedUser;
+        this.store.dispatch(AuthActions.registrationRequest({ user }));
 
-    register() {
-        if (!(this.registrationForm.valid)) {
-            this.isFormValid = false;
-        }
-        else {
-            if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
-                this.doPasswordsMatch = false;
-            }
-            else {
-                this.isFormValid = true;
-                this.doPasswordsMatch = true;
-
-                const { passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value
-                const user: User = plainedUser;
-                this.store.dispatch(AuthActions.registrationRequest({user}));
-
-                setTimeout(() => {
-                    this.router.navigate(['/login']);
-                }, 1500);
-            }
-        }
+        this.registrationMessage = "נרשמת בהצלחה למערכת!\n\nחוזרים למסך ההתחברות";
+      }
     }
+  }
 
-    openLoginPage() {
-        this.router.navigate(['/login']);
-    }
+  openLoginPage() {
+    this.router.navigate(['/login']);
+  }
 }

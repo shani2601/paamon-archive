@@ -22,8 +22,10 @@ button {
     font-size: 14px;
 }
 
-.confirm-message {
+.registration-message {
+    margin-top: 15px;
     font-size: 20px;
+    white-space: pre-line;
 }
 
 .already-have-user {
