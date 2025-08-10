@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import * as AuthActions from "../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
 import { User } from '../../models/user.model';
@@ -14,7 +15,7 @@ import { Subject, takeUntil } from "rxjs";
 @Component({
     standalone: true,
     selector: 'app-register',
-    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule],
+    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule],
     styleUrls: ['./register.component.css'],
     templateUrl: './register.component.html'
 })
@@ -25,6 +26,7 @@ export class RegisterComponent implements OnDestroy {
   registrationForm: FormGroup;
   registrationMessage: string | undefined;
   isDisabled = false;
+  isLoading = false;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router) {
     this.registrationForm = this.formBuilder.group({
@@ -66,8 +68,9 @@ export class RegisterComponent implements OnDestroy {
         const user: User = plainedUser;
         this.store.dispatch(AuthActions.registrationRequest({ user }));
 
+        this.isLoading = true;
         this.isDisabled = true;
-        this.registrationMessage = "נרשמת בהצלחה למערכת!\n\nחוזרים למסך ההתחברות";
+        this.registrationMessage = "נרשמת בהצלחה למערכת!";
       }
     }
   }
