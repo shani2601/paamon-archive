@@ -6,7 +6,6 @@ export interface AuthState {
     user: User | null;
     loading: boolean;
     error: string | null;
-    didWork: boolean;
 }
 
 export interface AppState {
@@ -16,8 +15,7 @@ export interface AppState {
 export const initialAuthState: AuthState = {
     user: null,
     loading: false,
-    error: null,
-    didWork: false
+    error: null
 };
 
 export const authReducer = createReducer(
@@ -33,14 +31,12 @@ export const authReducer = createReducer(
         ...state,
         user,
         loading: false,
-        error: null,
-        didWork: true
+        error: null
     })),
     on(AuthActions.loginFailure, (state, {error}) => ({
         ...state,
         loading: false,
-        error: error,
-        didWork: false
+        error: error
     })),
 
     // Registration
@@ -53,13 +49,11 @@ export const authReducer = createReducer(
         ...state,
         user,
         loading: false,
-        error: null,
-        didWork: true
+        error: null
     })),
     on(AuthActions.registrationFailure, (state, {error}) => ({
         ...state,
         loading: false,
-        error: error,
-        didWork: false
+        error: error
     }))
 );
