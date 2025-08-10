@@ -16,11 +16,11 @@ import { Actions, ofType } from "@ngrx/effects";
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule, ReactiveFormsModule],
     styleUrls: ['./login.component.css'],
     template: `<main lang="he" dir="rtl">
-        <h1 class="title">כניסה למערכת</h1><br><br>
+        <h1 class="title">כניסה למערכת</h1>
         <form [formGroup]="loginForm">
             <mat-form-field>
               <input formControlName="username" matInput placeholder="שם משתמש">
-            </mat-form-field><br>
+            </mat-form-field>
             
             <mat-form-field>
               <input formControlName="password" matInput placeholder="סיסמה">
@@ -49,7 +49,7 @@ export class LoginComponent {
     this.actions$.pipe(ofType(AuthActions.loginSuccess, AuthActions.loginFailure)).subscribe((action) => {
         if (action.type === AuthActions.loginSuccess.type) {
             this.hasLoginSucceded = true;
-        }
+                    }
         else if (action.type === AuthActions.loginFailure.type) {
             this.hasLoginSucceded = false;
             this.loginError = action.error;
