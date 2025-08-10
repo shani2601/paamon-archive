@@ -8,7 +8,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angula
 import { Store } from "@ngrx/store";
 import * as AuthActions from "../../state/auth/auth.actions";
 import { User } from "../../models/user.model";
-import { Actions, ofType } from "@ngrx/effects";
+import { firstValueFrom, Observable } from "rxjs";
+import * as AuthSelectors from '../../state/auth/auth.selectors';
 
 @Component({
     standalone: true,
@@ -26,7 +27,7 @@ import { Actions, ofType } from "@ngrx/effects";
               <input formControlName="password" matInput placeholder="סיסמה">
             </mat-form-field>
 
-            <button mat-stroked-button class="login-btn" (click)="login(); openAppPage()">התחבר</button>
+            <button mat-stroked-button class="login-btn" (click)="login()">התחבר</button>
             <label class="login-error">{{ loginError }}</label>
         </form>
 
@@ -37,30 +38,28 @@ import { Actions, ofType } from "@ngrx/effects";
 export class LoginComponent {
   private store = inject(Store);
   loginForm: FormGroup;
-  hasLoginSucceded: boolean | undefined;
   loginError: string | undefined;
-
-  constructor(private router: Router, private formBuilder: FormBuilder, private actions$: Actions) {
+  
+  constructor(private router: Router, private formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-
-    this.actions$.pipe(ofType(AuthActions.loginSuccess, AuthActions.loginFailure)).subscribe((action) => {
-        if (action.type === AuthActions.loginSuccess.type) {
-            this.hasLoginSucceded = true;
-                    }
-        else if (action.type === AuthActions.loginFailure.type) {
-            this.hasLoginSucceded = false;
-            this.loginError = action.error;
-        }
-    });
   }
 
-  login() {
+  async didProccessWork(): Promise<boolean> {
+    return (await firstValueFrom(this.store.select(AuthSelectors.selectDidWork)));
+  }
+
+  async login() {
     if (this.loginForm.valid) {
       const user: User = this.loginForm.value;
       this.store.dispatch(AuthActions.loginRequest({user}));
+
+      (await this.didProccessWork()) ? this.openAppPage() : (this.loginError = "אחד מהפרטים שהזנת לא נכונים");
+    }
+    else {
+      this.loginError = "יש למלא את כל השדות";
     }
   }
 

@@ -33,7 +33,7 @@ export class AuthEffects {
         map((user) => {
           return (this.authService.register(user)) ?
             AuthActions.registrationSuccess({ user }) : 
-            AuthActions.registrationFailure({error: 'Username already exists'});
+            AuthActions.registrationFailure({error: 'משתמש כבר קיים במערכת'});
         })
       )
     );
