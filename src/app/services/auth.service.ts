@@ -37,7 +37,6 @@ export class AuthService {
         u.username === user.username &&
         bcrypt.compareSync(user.password, u.password)
     );
-    debugger;
     return !!matchedUser;
   }
 

@@ -9,35 +9,31 @@ export class AuthEffects {
   loginRequest$;
   registrationRequest$;
 
-  constructor(private actions$: Actions, private authService: AuthService) {
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+  ) {
     this.loginRequest$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.loginRequest),
         map((action) => action.user),
         map((user) => {
-          const loginResult = this.authService.login(user);
-
-          return loginResult
-            ? AuthActions.loginSuccess({ user })
-            : AuthActions.loginFailure({
-                error: 'אחד מהפרטים שהזנת לא נכונים',
-              });
-        })
+          return (this.authService.login(user)) ? 
+              AuthActions.loginSuccess({ user }) :
+              AuthActions.loginFailure({ error: 'שגיאה בהתחברות' });
+          }
       )
-    );
+    )
+  );
 
     this.registrationRequest$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.registrationRequest),
         map((action) => action.user),
         map((user) => {
-          if (this.authService.register(user)) {
-            return AuthActions.registrationSuccess({ user });
-          } else {
-            return AuthActions.registrationFailure({
-              error: 'Username already exists',
-            });
-          }
+          return (this.authService.register(user)) ?
+            AuthActions.registrationSuccess({ user }) : 
+            AuthActions.registrationFailure({error: 'Username already exists'});
         })
       )
     );
