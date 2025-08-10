@@ -31,7 +31,7 @@ import { Router } from "@angular/router";
                 <input formControlName="password" type="password" matInput placeholder="סיסמה">
             </mat-form-field>
             <mat-form-field>
-                <input formControlName="passwordConfirming" type="password" matInput placeholder="אישור סיסמה">
+                <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
             </mat-form-field>
             <button mat-stroked-button type="button" (click)="register()">הירשם</button>
             <div class="messages">
@@ -63,7 +63,7 @@ export class RegisterComponent {
             lastName: ['', Validators.required],
             username: ['', Validators.required],
             password: ['', Validators.required],
-            passwordConfirming: ['', Validators.required]
+            passwordConfirmation: ['', Validators.required]
         });
 
         this.actions$.pipe(ofType(AuthActions.registrationSuccess, AuthActions.registrationFailure)).subscribe((action) => {
@@ -78,11 +78,11 @@ export class RegisterComponent {
 
     register() {
         if (this.registrationForm.valid) {
-            if (this.registrationForm.value.password === this.registrationForm.value.passwordConfirming) {
+            if (this.registrationForm.value.password === this.registrationForm.value.passwordConfirmation) {
                 this.isFormValid = true;
                 this.doPasswordsMatch = true;
 
-                const { passwordConfirming, ...plainedUser} = this.registrationForm.value
+                const { passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value
                 const user: User = plainedUser;
                 this.store.dispatch(AuthActions.registrationRequest({user}));
 
