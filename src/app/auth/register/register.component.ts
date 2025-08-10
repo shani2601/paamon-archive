@@ -16,33 +16,7 @@ import { Subject, takeUntil } from "rxjs";
     selector: 'app-register',
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule],
     styleUrls: ['./register.component.css'],
-    template: `<main lang="he" dir="rtl">
-        <h2>הרשמה למערכת</h2>
-        <form [formGroup]="registrationForm">
-            <mat-form-field>
-                <input formControlName="firstName" matInput placeholder="שם פרטי">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="lastName" matInput placeholder="שם משפחה">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="username" matInput placeholder="שם משתמש">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="password" type="password" matInput placeholder="סיסמה">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
-            </mat-form-field>
-            <button mat-stroked-button type="button" (click)="register()">הירשם</button>
-            <label class="registration-message">{{ registrationMessage }}</label>
-        </form>
-
-        <div class="already-have-user">
-            <label class="have-user-title">יש לך משתמש?</label>
-            <button mat-stroked-button class="login-btn" type="button" (click)="openLoginPage()">התחבר</button>
-        </div>
-    </main>`
+    templateUrl: './register.component.html'
 })
 export class RegisterComponent implements OnDestroy {
   private onDestroy$ = new Subject<void>();

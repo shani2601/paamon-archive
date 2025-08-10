@@ -16,24 +16,7 @@ import { Subject, takeUntil } from "rxjs";
     selector: 'app-login',
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule, ReactiveFormsModule],
     styleUrls: ['./login.component.css'],
-    template: `<main lang="he" dir="rtl">
-        <h1 class="title">כניסה למערכת</h1>
-        <form [formGroup]="loginForm">
-            <mat-form-field>
-              <input formControlName="username" matInput placeholder="שם משתמש">
-            </mat-form-field>
-            
-            <mat-form-field>
-              <input formControlName="password" matInput placeholder="סיסמה">
-            </mat-form-field>
-
-            <button mat-stroked-button class="login-btn" (click)="login()">התחבר</button>
-            <label class="login-error">{{ loginError }}</label>
-        </form>
-
-        <label class="no-user">אין לך משתמש?</label>
-        <button mat-stroked-button class="register-btn" (click)="openRegisterPage()">הרשמה</button>
-    </main>`
+    templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnDestroy{
   private destroy$ = new Subject<void>();
