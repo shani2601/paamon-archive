@@ -1,41 +1,47 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
+import * as bcrypt from 'bcryptjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-    private users$ = new BehaviorSubject<User[]>([]);
+  private users$ = new BehaviorSubject<User[]>([]);
 
-    register(user: User): boolean {
-        const currentUsers = this.users$.value;
+  constructor(private localStorageService: LocalStorageService) {
+    const users = this.localStorageService.getUsersFromStorage();
+    this.users$.next(users);
+  }
 
-        if (currentUsers.some(u => u.username === user.username)) {
-            return false;
-        }
-        else {
-            this.users$.next([...currentUsers, user]);
-            return true;
-        }
+  register(user: User): boolean {
+    const currentUsers = this.users$.value;
+
+    if (currentUsers.some((u) => u.username === user.username)) {
+      return false;
+    } else {        
+      user = {
+        ...user,
+        password: bcrypt.hashSync(user.password, 10),
+      };
+      const updatedUsers = [...currentUsers, user];
+      this.users$.next(updatedUsers);
+      this.localStorageService.saveUsersToStorage(updatedUsers);
+      return true;
     }
+  }
 
-    login(user: User): "success" | "wrong-username" | "wrong-password" {
-        const matchedUser = this.users$.value.find(u => u.username === user.username);
+  login(user: User): boolean {
+    const matchedUser = this.users$.value.find(
+      (u) =>
+        u.username === user.username &&
+        bcrypt.compareSync(user.password, u.password)
+    );
+    debugger;
+    return !!matchedUser;
+  }
 
-        if (matchedUser) {
-            if (matchedUser.password === user.password) {
-                return "success";
-            }
-            else {
-                return "wrong-password";
-            }
-        }
-        else {
-            return "wrong-username";
-        }
-    }
-
-    getUsers(): Observable<User[]> {
-        return (this.users$.asObservable());
-    }
+  getUsers(): Observable<User[]> {
+    return this.users$.asObservable();
+  }
 }
