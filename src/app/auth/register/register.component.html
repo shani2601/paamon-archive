@@ -1,28 +1,32 @@
 `<main>
-    <h2>הרשמה למערכת</h2>
-    <form [formGroup]="registrationForm">
-        <mat-form-field>
-            <input formControlName="firstName" matInput placeholder="שם פרטי">
-        </mat-form-field>
-        <mat-form-field>
-            <input formControlName="lastName" matInput placeholder="שם משפחה">
-        </mat-form-field>
-        <mat-form-field>
-            <input formControlName="username" matInput placeholder="שם משתמש">
-        </mat-form-field>
-        <mat-form-field>
-            <input formControlName="password" type="password" matInput placeholder="סיסמה">
-        </mat-form-field>
-        <mat-form-field>
-            <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
-        </mat-form-field>
-        <button mat-stroked-button type="button" (click)="register()">הירשם</button>
-        <label class="registration-message">{{ registrationMessage }}</label>
-        <mat-progress-spinner *ngIf="isLoading" [diameter]="50" [strokeWidth]="5" color="accent" mode="indeterminate"></mat-progress-spinner>
-    </form>
+    <h1>הרשמה למערכת</h1>
+    <div class="section-container">
+        <form [formGroup]="registrationForm">
+            <mat-form-field>
+                <input formControlName="firstName" matInput placeholder="שם פרטי">
+            </mat-form-field>
+            <mat-form-field>
+                <input formControlName="lastName" matInput placeholder="שם משפחה">
+            </mat-form-field>
+            <mat-form-field>
+                <input formControlName="username" matInput placeholder="שם משתמש">
+            </mat-form-field>
+            <mat-form-field>
+                <input formControlName="password" type="password" matInput placeholder="סיסמה">
+            </mat-form-field>
+            <mat-form-field>
+                <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
+            </mat-form-field>
+            <button mat-stroked-button type="button" (click)="register()">הירשם</button>
+            <label class="registration-message">{{ registrationMessage }}</label>
+            <mat-progress-spinner *ngIf="isLoading" [diameter]="50" [strokeWidth]="5" color="accent" mode="indeterminate"></mat-progress-spinner>
+        </form>
 
-    <div class="already-have-user">
-        <label class="have-user-title">יש לך משתמש?</label>
-        <button mat-stroked-button class="login-btn" type="button" [disabled]="isDisabled" (click)="openLoginPage()">התחבר</button>
+        <div class="divider">או</div>
+
+        <div class="login-section">
+            <label class="have-user-title">יש לך משתמש?</label>
+            <button mat-stroked-button class="login-btn" type="button" [disabled]="isDisabled" (click)="openLoginPage()">התחבר</button>
+        </div>
     </div>
 </main>`

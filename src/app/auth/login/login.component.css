@@ -20,8 +20,11 @@ form label {
     font-size: 20px;
 }
 
+.register-section {
+    margin-top: 60px;
+}
+
 .no-user {
-    margin-top: 100px;
     margin-bottom: 7px;
     font-size: 16px;
 }
@@ -32,4 +35,32 @@ button {
 
 .login-error {
     margin-top: 15px;
+}
+
+.section-container {
+    width: 400px;
+    height: 500px;
+    background-color: rgb(241, 241, 231);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+form {
+    margin-top: 50px;
+}
+
+.divider {
+  flex-direction: row;
+  width: 100%;
+  color: rgb(174, 168, 168);
+  margin-top: 50px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background-color: rgb(174, 168, 168);
+  margin: 0 20px;
 }

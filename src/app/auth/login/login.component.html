@@ -1,18 +1,24 @@
 `<main>
     <h1 class="title">כניסה למערכת</h1>
-    <form [formGroup]="loginForm">
-        <mat-form-field>
-            <input formControlName="username" matInput placeholder="שם משתמש">
-        </mat-form-field>
+    <div class="section-container">
+        <form [formGroup]="loginForm">
+            <mat-form-field>
+                <input formControlName="username" matInput placeholder="שם משתמש">
+            </mat-form-field>
 
-        <mat-form-field>
-            <input formControlName="password" matInput placeholder="סיסמה">
-        </mat-form-field>
+            <mat-form-field>
+                <input formControlName="password" matInput placeholder="סיסמה">
+            </mat-form-field>
 
-        <button mat-stroked-button class="login-btn" (click)="login()">התחבר</button>
-        <label class="login-error">{{ loginError }}</label>
-    </form>
+            <button mat-stroked-button class="login-btn" (click)="login()">התחבר</button>
+            <label class="login-error">{{ loginError }}</label>
+        </form>
 
-    <label class="no-user">אין לך משתמש?</label>
-    <button mat-stroked-button class="register-btn" (click)="openRegisterPage()">הרשמה</button>
+        <div class="divider">או</div>
+
+        <div class="register-section">
+            <label class="no-user">אין לך משתמש?</label>
+            <button mat-stroked-button class="register-btn" (click)="openRegisterPage()">הרשמה</button>
+        </div>
+    </div>
 </main>`
