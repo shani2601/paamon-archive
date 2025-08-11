@@ -20,6 +20,10 @@ button {
     font-size: 14px;
 }
 
+.register-btn {
+    margin-top: 15px;
+}
+
 mat-progress-spinner {
     margin-top: 20px;
 }
