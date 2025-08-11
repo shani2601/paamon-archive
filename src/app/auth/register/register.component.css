@@ -30,7 +30,7 @@ mat-progress-spinner {
 }
 
 .login-section {
-    margin-top: 60px;
+    margin-top: 50px;
 }
 
 .have-user-title {
@@ -54,7 +54,7 @@ form {
   flex-direction: row;
   width: 100%;
   color: rgb(174, 168, 168);
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
 .divider::before,
