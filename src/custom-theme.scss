@@ -16,6 +16,24 @@ html {
   color: rgb(212, 175, 55);
 }
 
+.custom-success-dialog {
+  background-color: rgb(241, 241, 231);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.custom-success-dialog mat-dialog-content {
+  font-size: 18px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  direction: rtl;
+}
+
+.custom-success-dialog mat-progress-spinner {
+  margin-top: 20px;
+}
+
 .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
-  stroke: rgb(128, 124, 124) !important;
+  stroke: rgb(212, 175, 55) !important;
 }

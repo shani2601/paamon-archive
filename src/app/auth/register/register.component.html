@@ -18,8 +18,17 @@
                 <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
             </mat-form-field>
             <button mat-stroked-button class="register-btn" type="button" (click)="register()">הירשם</button>
-            <label class="registration-message">{{ registrationMessage }}</label>
-            <mat-progress-spinner *ngIf="isLoading" [diameter]="50" [strokeWidth]="5" color="accent" mode="indeterminate"></mat-progress-spinner>
+
+            <label class="error-message">{{ errorMessage }}</label>
+
+            <ng-template #successDialog>
+                <mat-dialog-content>
+                    {{ successMessage }}
+                    <div class="spinner-container" *ngIf="isLoading">
+                        <mat-progress-spinner [diameter]="50" [strokeWidth]="5" color="accent" mode="indeterminate"></mat-progress-spinner>
+                    </div>
+                </mat-dialog-content>
+            </ng-template>
         </form>
 
         <div class="divider">או</div>
