@@ -1,105 +1,99 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnDestroy, ViewChild, TemplateRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import * as AuthActions from "../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
 import { User } from '../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Actions, ofType } from "@ngrx/effects";
 import { Router } from "@angular/router";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
     standalone: true,
     selector: 'app-register',
-    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule],
+    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule],
     styleUrls: ['./register.component.css'],
-    template: `<main lang="he" dir="rtl">
-        <h2>הרשמה למערכת</h2>
-        <form [formGroup]="registrationForm">
-            <mat-form-field>
-                <input formControlName="firstName" matInput placeholder="שם פרטי">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="lastName" matInput placeholder="שם משפחה">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="username" matInput placeholder="שם משתמש">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="password" type="password" matInput placeholder="סיסמה">
-            </mat-form-field>
-            <mat-form-field>
-                <input formControlName="passwordConfirming" type="password" matInput placeholder="אישור סיסמה">
-            </mat-form-field>
-            <button mat-stroked-button type="button" (click)="register()">הירשם</button>
-            <div class="messages">
-                <label class="confirm-message" *ngIf="hasRegistrationSucceeded === true">נרשמת בהצלחה למערכת!<br><br>חוזרים למסך ההתחברות</label>
-                <label class="existed-username-message" *ngIf="hasRegistrationSucceeded === false">שם משתמש כבר קיים במערכת</label>
-                <label class="missing-fields-message" *ngIf="isFormValid === false">יש למלא את כל השדות</label>
-                <label class="unmatched-passwords-message" *ngIf="doPasswordsMatch === false">סיסמאות לא תואמות</label>
-            </div>
-        </form>
-
-        <div class="already-have-user">
-            <label class="have-user-title">יש לך משתמש?</label>
-            <button mat-stroked-button class="login-btn" type="button" (click)="openLoginPage()">התחבר</button>
-        </div>
-    </main>`
+    templateUrl: './register.component.html'
 })
-export class RegisterComponent {
-    private store = inject(Store);
+export class RegisterComponent implements OnDestroy {
+  @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
-    hasRegistrationSucceeded: boolean | undefined;
-    isFormValid: boolean | undefined;
-    doPasswordsMatch: boolean | undefined;
+  private onDestroy$ = new Subject<void>();
+  private store = inject(Store);
 
-    registrationForm: FormGroup;
+  dialogRef: any;
+  registrationForm: FormGroup;
+  errorMessage: string | undefined;
+  successMessage: string | undefined;
+  isDisabled = false;
+  isLoading = false;
 
-    constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router) {
-        this.registrationForm = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            username: ['', Validators.required],
-            password: ['', Validators.required],
-            passwordConfirming: ['', Validators.required]
-        });
+  constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router, private dialog: MatDialog) {
+    this.registrationForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      passwordConfirmation: ['', Validators.required],
+    });
 
-        this.actions$.pipe(ofType(AuthActions.registrationSuccess, AuthActions.registrationFailure)).subscribe((action) => {
-            if (action.type === AuthActions.registrationSuccess.type) {
-                this.hasRegistrationSucceeded = true;
-            }
-            else if (action.type === AuthActions.registrationFailure.type) {
-                this.hasRegistrationSucceeded = false;
-            }
-        });
+    this.actions$
+      .pipe(ofType(AuthActions.registrationSuccess), takeUntil(this.onDestroy$))
+      .subscribe(() => {
+        this.setSuccessDialog();
+
+        setTimeout(() => {
+          this.dialogRef.close();
+          this.router.navigate(['/login']);
+        }, 1500);
+      });
+
+    this.actions$
+      .pipe(ofType(AuthActions.registrationFailure), takeUntil(this.onDestroy$))
+      .subscribe((action) => (this.errorMessage = action.error));
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  register() {
+    if (!this.registrationForm.valid) {
+      this.errorMessage = "יש למלא את כל השדות";
     }
-
-    register() {
-        if (this.registrationForm.valid) {
-            if (this.registrationForm.value.password === this.registrationForm.value.passwordConfirming) {
-                this.isFormValid = true;
-                this.doPasswordsMatch = true;
-
-                const { passwordConfirming, ...plainedUser} = this.registrationForm.value
-                const user: User = plainedUser;
-                this.store.dispatch(AuthActions.registrationRequest({user}));
-
-                setTimeout(() => {
-                    this.router.navigate(['/login']);
-                }, 1500);
-            }
-            else {
-                this.doPasswordsMatch = false;
-            }
-        }
-        else {
-            this.isFormValid = false;
-        }
+    else {
+      if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+        this.errorMessage = "סיסמאות לא תואמות";
+      }
+      else {
+        const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
+        const user: User = plainedUser;
+        this.store.dispatch(AuthActions.registrationRequest({ user }));
+      }
     }
+  }
 
-    openLoginPage() {
-        this.router.navigate(['/login']);
-    }
+  openLoginPage() {
+    this.router.navigate(['/login']);
+  }
+
+  setSuccessDialog() {
+    this.errorMessage = undefined;
+
+    this.isLoading = true;
+    this.isDisabled = true;
+    this.successMessage = "נרשמת בהצלחה למערכת!";
+
+    this.dialogRef = this.dialog.open(this.successDialog, {
+      data: { message: this.successMessage },
+      width: '320px',
+      panelClass: 'custom-success-dialog'
+    });
+  }
 }
