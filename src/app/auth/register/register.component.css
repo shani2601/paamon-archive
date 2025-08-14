@@ -33,6 +33,7 @@ mat-progress-spinner {
     font-size: 17px;
     font-weight: bold;
     color: rgb(214, 19, 19);
+    text-align: center;
 }
 
 .login-section {
@@ -46,7 +47,7 @@ mat-progress-spinner {
 
 .section-container {
     width: 400px;
-    height: 700px;
+    height: 730px;
     background-color: rgb(241, 241, 231);
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
