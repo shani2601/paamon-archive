@@ -20,8 +20,8 @@ import { Subject, takeUntil } from "rxjs";
 })
 export class LoginComponent implements OnDestroy{
   private destroy$ = new Subject<void>();
-
   private store = inject(Store);
+
   loginForm: FormGroup;
   loginError: string | undefined;
 
