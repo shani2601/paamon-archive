@@ -44,13 +44,13 @@ export class LoginComponent implements OnDestroy{
   }
 
   login() {
-    if (this.loginForm.valid) {
-      const user: User = this.loginForm.value;
-      this.store.dispatch(AuthActions.loginRequest({user}));
-    }
-    else {
+    if (!(this.loginForm.valid)) {
       this.loginError = "יש למלא את כל השדות";
+      return;
     }
+
+    const user: User = this.loginForm.value;
+    this.store.dispatch(AuthActions.loginRequest({user}));
   }
 
   openAppPage() {
