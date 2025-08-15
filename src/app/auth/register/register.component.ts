@@ -30,9 +30,7 @@ export class RegisterComponent implements OnDestroy {
   registrationForm: FormGroup;
   errorMessage: string | undefined;
   successMessage: string | undefined;
-  isDisabled = false;
   isLoading = false;
-
   passwordRegex = /^(?=.*[a-z])(?=.\d).{8,}$/;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router, private dialog: MatDialog) {
@@ -72,20 +70,22 @@ export class RegisterComponent implements OnDestroy {
   register() {
     if (!this.registrationForm.valid) {
       this.errorMessage = "יש למלא את כל השדות";
+      return;
     }
-    else if (!(this.isPasswordRegexValid())) {
+
+    if (!(this.isPasswordRegexValid())) {
       this.errorMessage = "הסיסמה חייבת להכיל שמונה תווים לפחות, ולכלול אותיות ומספרים";
+      return;
     }
-    else {
-      if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
-        this.errorMessage = "סיסמאות לא תואמות";
-      }
-      else {
-        const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
-        const user: User = plainedUser;
-        this.store.dispatch(AuthActions.registrationRequest({ user }));
-      }
+
+    if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+      this.errorMessage = "סיסמאות לא תואמות";
+      return;
     }
+
+    const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
+    const user: User = plainedUser;
+    this.store.dispatch(AuthActions.registrationRequest({ user }));
   }
 
   openLoginPage() {
@@ -96,7 +96,6 @@ export class RegisterComponent implements OnDestroy {
     this.errorMessage = undefined;
 
     this.isLoading = true;
-    this.isDisabled = true;
     this.successMessage = "נרשמת בהצלחה למערכת!";
 
     this.dialogRef = this.dialog.open(this.successDialog, {
