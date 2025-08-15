@@ -19,11 +19,11 @@ html {
 .custom-success-dialog {
   background-color: rgb(241, 241, 231);
   border-radius: 12px;
-  padding: 20px;
+  padding: 2rem;
 }
 
 .custom-success-dialog mat-dialog-content {
-  font-size: 18px !important;
+  font-size: 1.125rem !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,7 +31,7 @@ html {
 }
 
 .custom-success-dialog mat-progress-spinner {
-  margin-top: 20px;
+  margin-top: 2vh;
 }
 
 .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
