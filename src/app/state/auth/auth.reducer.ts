@@ -40,7 +40,7 @@ const setFailure = (state: AuthState, error: string): AuthState => ({
 export const authReducer = createReducer(
     initialAuthState,
     
-    on(AuthActions.loginRequest, AuthActions.registrationRequest, state => setRequest(state)),
-    on(AuthActions.loginSuccess, AuthActions.registrationSuccess, (state, {user}) => setSuccess(state, user)),
-    on(AuthActions.loginFailure, AuthActions.registrationFailure, (state, {error}) => setFailure(state, error)),
+    on(AuthActions.loginActions.request, AuthActions.registrationActions.request, state => setRequest(state)),
+    on(AuthActions.loginActions.success, AuthActions.registrationActions.success, (state, {user}) => setSuccess(state, user)),
+    on(AuthActions.loginActions.failure, AuthActions.registrationActions.failure, (state, {error}) => setFailure(state, error)),
 );

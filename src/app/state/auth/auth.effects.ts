@@ -16,13 +16,13 @@ export class AuthEffects {
   ) {
     this.loginRequest$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(AuthActions.loginRequest),
+        ofType(AuthActions.loginActions.request),
         switchMap(({ user }) =>
           of(this.authService.login(user)).pipe(
             map(success =>
               success ? 
-              AuthActions.loginSuccess({ user }) : 
-              AuthActions.loginFailure({ error: 'אחד או יותר מהפרטים שהזנת שגויים' })
+              AuthActions.loginActions.success({ user }) : 
+              AuthActions.loginActions.failure({ error: 'אחד או יותר מהפרטים שהזנת שגויים' })
             )
           )
         )
@@ -31,13 +31,13 @@ export class AuthEffects {
 
     this.registrationRequest$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(AuthActions.registrationRequest),
+        ofType(AuthActions.registrationActions.request),
         switchMap(({ user }) =>
           of(this.authService.register(user)).pipe(
             map(success =>
               success ? 
-              AuthActions.registrationSuccess({ user }) : 
-              AuthActions.registrationFailure({ error: 'משתמש כבר קיים במערכת' })
+              AuthActions.registrationActions.success({ user }) : 
+              AuthActions.registrationActions.failure({ error: 'משתמש כבר קיים במערכת' })
             )
           )
         )

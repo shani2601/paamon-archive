@@ -43,7 +43,7 @@ export class RegisterComponent implements OnDestroy {
     });
 
     this.actions$
-      .pipe(ofType(AuthActions.registrationSuccess), takeUntil(this.onDestroy$))
+      .pipe(ofType(AuthActions.registrationActions.success), takeUntil(this.onDestroy$))
       .subscribe(() => {
         this.setSuccessDialog();
 
@@ -54,7 +54,7 @@ export class RegisterComponent implements OnDestroy {
       });
 
     this.actions$
-      .pipe(ofType(AuthActions.registrationFailure), takeUntil(this.onDestroy$))
+      .pipe(ofType(AuthActions.registrationActions.failure), takeUntil(this.onDestroy$))
       .subscribe((action) => (this.errorMessage = action.error));
   }
 
@@ -85,7 +85,7 @@ export class RegisterComponent implements OnDestroy {
 
     const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
     const user: User = plainedUser;
-    this.store.dispatch(AuthActions.registrationRequest({ user }));
+    this.store.dispatch(AuthActions.registrationActions.request({ user }));
   }
 
   openLoginPage() {
