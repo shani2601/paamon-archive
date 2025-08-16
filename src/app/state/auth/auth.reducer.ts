@@ -42,5 +42,5 @@ export const authReducer = createReducer(
     
     on(AuthActions.loginActions.request, AuthActions.registrationActions.request, state => setRequest(state)),
     on(AuthActions.loginActions.success, AuthActions.registrationActions.success, (state, {user}) => setSuccess(state, user)),
-    on(AuthActions.loginActions.failure, AuthActions.registrationActions.failure, (state, {error}) => setFailure(state, error)),
+    on(AuthActions.loginActions.failure, AuthActions.registrationActions.failure, (state, {error}) => setFailure(state, error))
 );
