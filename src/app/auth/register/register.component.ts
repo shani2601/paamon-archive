@@ -31,7 +31,7 @@ export class RegisterComponent implements OnDestroy {
   errorMessage: string | undefined;
   successMessage: string | undefined;
   isLoading = false;
-  passwordRegex = /^(?=.*[a-z])(?=.\d).{8,}$/;
+  passwordRegex = /^(?=.*[a-z])(?=.*\d).{8,}$/;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router, private dialog: MatDialog) {
     this.registrationForm = this.formBuilder.group({
