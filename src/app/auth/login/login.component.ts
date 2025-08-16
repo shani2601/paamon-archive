@@ -31,10 +31,10 @@ export class LoginComponent implements OnDestroy{
       password: ['', Validators.required]
     });
 
-    this.actions$.pipe(ofType(AuthActions.loginSuccess), takeUntil(this.destroy$))
+    this.actions$.pipe(ofType(AuthActions.loginActions.success), takeUntil(this.destroy$))
       .subscribe(() => this.openAppPage());
 
-    this.actions$.pipe(ofType(AuthActions.loginFailure), takeUntil(this.destroy$))
+    this.actions$.pipe(ofType(AuthActions.loginActions.failure), takeUntil(this.destroy$))
       .subscribe(action => this.loginError = action.error);
   }
 
@@ -50,7 +50,7 @@ export class LoginComponent implements OnDestroy{
     }
 
     const user: User = this.loginForm.value;
-    this.store.dispatch(AuthActions.loginRequest({user}));
+    this.store.dispatch(AuthActions.loginActions.request({user}));
   }
 
   openAppPage() {
