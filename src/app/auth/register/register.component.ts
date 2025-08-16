@@ -31,14 +31,13 @@ export class RegisterComponent implements OnDestroy {
   errorMessage: string | undefined;
   successMessage: string | undefined;
   isLoading = false;
-  passwordRegex = /^(?=.*[a-z])(?=.*\d).{8,}$/;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router, private dialog: MatDialog) {
     this.registrationForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/)]],
       passwordConfirmation: ['', Validators.required],
     });
 
@@ -63,18 +62,14 @@ export class RegisterComponent implements OnDestroy {
     this.onDestroy$.complete();
   }
 
-  isPasswordRegexValid() {
-    return (this.passwordRegex.test(this.registrationForm.value.password));
-  }
-
   register() {
-    if (!this.registrationForm.valid) {
-      this.errorMessage = "יש למלא את כל השדות";
-      return;
-    }
+    if (this.registrationForm.invalid) {
+      if (this.registrationForm.get('password')?.errors?.['pattern']) {
+        this.errorMessage = "הסיסמה חייבת להכיל שמונה תווים לפחות, ולכלול אותיות ומספרים";
+        return;
+      }
 
-    if (!(this.isPasswordRegexValid())) {
-      this.errorMessage = "הסיסמה חייבת להכיל שמונה תווים לפחות, ולכלול אותיות ומספרים";
+      this.errorMessage = "יש למלא את כל השדות";
       return;
     }
 

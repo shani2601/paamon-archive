@@ -44,7 +44,7 @@ export class LoginComponent implements OnDestroy{
   }
 
   login() {
-    if (!(this.loginForm.valid)) {
+    if (this.loginForm.invalid) {
       this.loginError = "יש למלא את כל השדות";
       return;
     }
