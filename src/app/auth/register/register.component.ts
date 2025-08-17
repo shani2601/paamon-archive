@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild, TemplateRef } from "@angular/core";
+import { Component, inject, ViewChild, TemplateRef, DestroyRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,7 +12,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Actions, ofType } from "@ngrx/effects";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DestroyRef } from '@angular/core';
 
 @Component({
     standalone: true,
