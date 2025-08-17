@@ -7,6 +7,6 @@ import { Component } from "@angular/core";
     styleUrls: [],
     template: ``
 })
-export class Headline {
+export class HeadlineComponent {
 
 }
