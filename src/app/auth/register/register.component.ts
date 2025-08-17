@@ -10,13 +10,13 @@ import { Store } from "@ngrx/store";
 import { User } from '../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Actions, ofType } from "@ngrx/effects";
-import { Router } from "@angular/router";
 import { Subject, takeUntil } from "rxjs";
+import { RouterLink } from '@angular/router';
 
 @Component({
     standalone: true,
     selector: 'app-register',
-    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule],
+    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule, RouterLink],
     styleUrls: ['./register.component.css'],
     templateUrl: './register.component.html'
 })
@@ -32,7 +32,7 @@ export class RegisterComponent implements OnDestroy {
   successMessage: string | undefined;
   isLoading = false;
 
-  constructor(private formBuilder: FormBuilder, private actions$: Actions, private router: Router, private dialog: MatDialog) {
+  constructor(private formBuilder: FormBuilder, private actions$: Actions, private dialog: MatDialog) {
     this.registrationForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -45,11 +45,7 @@ export class RegisterComponent implements OnDestroy {
       .pipe(ofType(AuthActions.registrationActions.success), takeUntil(this.onDestroy$))
       .subscribe(() => {
         this.setSuccessDialog();
-
-        setTimeout(() => {
-          this.dialogRef.close();
-          this.router.navigate(['/login']);
-        }, 1500);
+        setTimeout(() => this.dialogRef.close(), 1500);
       });
 
     this.actions$
@@ -81,10 +77,6 @@ export class RegisterComponent implements OnDestroy {
     const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
     const user: User = plainedUser;
     this.store.dispatch(AuthActions.registrationActions.request({ user }));
-  }
-
-  openLoginPage() {
-    this.router.navigate(['/login']);
   }
 
   setSuccessDialog() {
