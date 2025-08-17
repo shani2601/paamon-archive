@@ -10,8 +10,9 @@ import { Store } from "@ngrx/store";
 import { User } from '../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Actions, ofType } from "@ngrx/effects";
-import { Subject, takeUntil } from "rxjs";
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
 
 @Component({
     standalone: true,
@@ -20,10 +21,9 @@ import { RouterLink } from '@angular/router';
     styleUrls: ['./register.component.css'],
     templateUrl: './register.component.html'
 })
-export class RegisterComponent implements OnDestroy {
+export class RegisterComponent {
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
-  private onDestroy$ = new Subject<void>();
   private store = inject(Store);
 
   dialogRef: any;
@@ -32,7 +32,7 @@ export class RegisterComponent implements OnDestroy {
   successMessage: string | undefined;
   isLoading = false;
 
-  constructor(private formBuilder: FormBuilder, private actions$: Actions, private dialog: MatDialog) {
+  constructor(private formBuilder: FormBuilder, private actions$: Actions, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -42,20 +42,15 @@ export class RegisterComponent implements OnDestroy {
     });
 
     this.actions$
-      .pipe(ofType(AuthActions.registrationActions.success), takeUntil(this.onDestroy$))
+      .pipe(ofType(AuthActions.registrationActions.success), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.setSuccessDialog();
         setTimeout(() => this.dialogRef.close(), 1500);
       });
 
     this.actions$
-      .pipe(ofType(AuthActions.registrationActions.failure), takeUntil(this.onDestroy$))
+      .pipe(ofType(AuthActions.registrationActions.failure), takeUntilDestroyed(this.destroyRef))
       .subscribe((action) => (this.errorMessage = action.error));
-  }
-
-  ngOnDestroy(): void {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
   }
 
   register() {

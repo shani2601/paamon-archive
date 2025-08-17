@@ -8,8 +8,9 @@ import { Store } from "@ngrx/store";
 import * as AuthActions from "../../state/auth/auth.actions";
 import { User } from "../../models/user.model";
 import { Actions, ofType } from "@ngrx/effects";
-import { Subject, takeUntil } from "rxjs";
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
 
 @Component({
     standalone: true,
@@ -18,26 +19,20 @@ import { RouterLink } from '@angular/router';
     styleUrls: ['./login.component.css'],
     templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnDestroy{
-  private destroy$ = new Subject<void>();
+export class LoginComponent {
   private store = inject(Store);
 
   loginForm: FormGroup;
   loginError: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private actions$: Actions) {
+  constructor(private formBuilder: FormBuilder, private actions$: Actions, private destroyRef: DestroyRef) {
     this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
 
-    this.actions$.pipe(ofType(AuthActions.loginActions.failure), takeUntil(this.destroy$))
+    this.actions$.pipe(ofType(AuthActions.loginActions.failure), takeUntilDestroyed(this.destroyRef))
       .subscribe(action => this.loginError = action.error);
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   login() {
