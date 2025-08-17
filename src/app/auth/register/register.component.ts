@@ -29,7 +29,6 @@ export class RegisterComponent {
   registrationForm: FormGroup;
   errorMessage: string | undefined;
   successMessage: string | undefined;
-  isLoading = false;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
@@ -43,6 +42,7 @@ export class RegisterComponent {
     this.actions$
       .pipe(ofType(AuthActions.registrationActions.success), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
+        this.errorMessage = undefined;
         this.setSuccessDialog();
         setTimeout(() => this.dialogRef.close(), 1500);
       });
@@ -74,9 +74,6 @@ export class RegisterComponent {
   }
 
   setSuccessDialog() {
-    this.errorMessage = undefined;
-
-    this.isLoading = true;
     this.successMessage = "נרשמת בהצלחה למערכת!";
 
     this.dialogRef = this.dialog.open(this.successDialog, {
