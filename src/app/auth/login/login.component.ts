@@ -26,7 +26,7 @@ export class LoginComponent implements OnDestroy{
   loginError: string | undefined;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions) {
-    this.loginForm = this.formBuilder.group({
+    this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });

@@ -33,7 +33,7 @@ export class RegisterComponent implements OnDestroy {
   isLoading = false;
 
   constructor(private formBuilder: FormBuilder, private actions$: Actions, private dialog: MatDialog) {
-    this.registrationForm = this.formBuilder.group({
+    this.registrationForm = this.formBuilder.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],
