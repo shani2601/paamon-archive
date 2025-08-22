@@ -7,9 +7,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angula
 import { Store } from "@ngrx/store";
 import * as AuthActions from "../../state/auth/auth.actions";
 import { User } from "../../models/user.model";
-import { Actions, ofType } from "@ngrx/effects";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { selectLoginError } from "../../state/auth/auth.selectors";
 
 @Component({
     standalone: true,
@@ -24,14 +24,14 @@ export class LoginComponent {
   loginForm: FormGroup;
   loginError: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private actions$: Actions, private destroyRef: DestroyRef) {
+  constructor(private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
     this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
 
-    this.actions$.pipe(ofType(AuthActions.loginActions.failure), takeUntilDestroyed(this.destroyRef))
-      .subscribe(action => this.loginError = action.error);
+    this.store.select(selectLoginError).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(err => this.loginError = err ?? undefined);
   }
 
   login() {
