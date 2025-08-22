@@ -29,7 +29,8 @@ export class RegisterComponent {
   dialogRef: any;
   registrationForm: FormGroup;
   errorMessage: string | undefined;
-  successMessage: string | undefined;
+
+  successMessage = "נרשמת בהצלחה למערכת!";
 
   constructor(private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
@@ -72,8 +73,6 @@ export class RegisterComponent {
   }
 
   setSuccessDialog() {
-    this.successMessage = "נרשמת בהצלחה למערכת!";
-
     this.dialogRef = this.dialog.open(this.successDialog, {
       data: { message: this.successMessage },
       width: '320px',
