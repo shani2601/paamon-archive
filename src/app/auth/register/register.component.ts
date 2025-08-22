@@ -1,9 +1,9 @@
-import { Component, inject, ViewChild, TemplateRef, DestroyRef } from "@angular/core";
+import { Component, ViewChild, TemplateRef, DestroyRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import * as AuthActions from "../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
@@ -13,25 +13,26 @@ import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectRegistrationError, selectRegistrationDone } from "../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
+import { AuthState } from "../../state/auth/auth.reducer";
+import { Router } from "@angular/router";
 
 @Component({
     standalone: true,
     selector: 'app-register',
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule, RouterLink],
-    styleUrls: ['./register.component.css'],
+    styleUrl: './register.component.css',
     templateUrl: './register.component.html'
 })
 export class RegisterComponent {
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
-  private store = inject(Store);
-
   dialogRef: any;
   registrationForm: FormGroup;
   errorMessage: string | undefined;
-  successMessage: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
+  successMessage = "נרשמת בהצלחה למערכת!";
+
+  constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -41,10 +42,7 @@ export class RegisterComponent {
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.setSuccessDialog();
-        setTimeout(() => this.dialogRef.close(), 1500);
-      });
+      .subscribe(() => {this.setSuccessDialog().afterClosed().subscribe(() => this.router.navigate(['/login']))});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.errorMessage = err ?? undefined);
@@ -71,13 +69,15 @@ export class RegisterComponent {
     this.store.dispatch(AuthActions.registrationActions.request({ user }));
   }
 
-  setSuccessDialog() {
-    this.successMessage = "נרשמת בהצלחה למערכת!";
-
+  setSuccessDialog(): MatDialogRef<any> {
     this.dialogRef = this.dialog.open(this.successDialog, {
       data: { message: this.successMessage },
       width: '320px',
       panelClass: 'custom-success-dialog'
     });
+
+    setTimeout(() => {this.dialogRef.close()}, 1500);
+
+    return this.dialogRef;
   }
 }

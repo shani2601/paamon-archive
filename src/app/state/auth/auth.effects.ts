@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { delay, map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../services/auth.service';
@@ -11,7 +11,6 @@ export class AuthEffects {
   loginRequest$;
   navigateOnLoginSuccess$;
   registrationRequest$;
-  navigateOnRegistrationSuccess$;
 
   constructor(private router: Router, private actions$: Actions, private authService: AuthService) {
     this.loginRequest$ = createEffect(() =>
@@ -53,14 +52,6 @@ export class AuthEffects {
           )
         )
       )
-    );
-
-    this.navigateOnRegistrationSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(AuthActions.registrationActions.success),
-        delay(1500),
-        tap(() => this.router.navigate(['/login']))
-      ), { dispatch: false }
     );
   }
 }

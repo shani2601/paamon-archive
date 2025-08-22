@@ -1,4 +1,4 @@
-import { Component, inject, DestroyRef } from "@angular/core";
+import { Component, DestroyRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,21 +10,20 @@ import { User } from "../../models/user.model";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectLoginError } from "../../state/auth/auth.selectors";
+import { AuthState } from "../../state/auth/auth.reducer";
 
 @Component({
     standalone: true,
     selector: 'app-login',
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule, ReactiveFormsModule, RouterLink],
-    styleUrls: ['./login.component.css'],
+    styleUrl: './login.component.css',
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
-  private store = inject(Store);
-
   loginForm: FormGroup;
   loginError: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
+  constructor(private store: Store<AuthState>, private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
     this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
