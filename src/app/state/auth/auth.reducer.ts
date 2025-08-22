@@ -18,42 +18,29 @@ export const initialAuthState: AuthState = {
     error: null
 };
 
+const setRequest = (state: AuthState): AuthState => ({
+    ...state,
+    loading: true,
+    error: null
+});
+
+const setSuccess = (state: AuthState, user: User): AuthState => ({
+    ...state,
+    user,
+    loading: false,
+    error: null
+});
+
+const setFailure = (state: AuthState, error: string): AuthState => ({
+    ...state,
+    loading: false,
+    error
+});
+
 export const authReducer = createReducer(
     initialAuthState,
     
-    // Login
-    on(AuthActions.loginRequest, state => ({
-        ...state,
-        loading: true,
-        error: null
-    })),
-    on(AuthActions.loginSuccess, (state, {user}) => ({
-        ...state,
-        user,
-        loading: false,
-        error: null
-    })),
-    on(AuthActions.loginFailure, (state, {error}) => ({
-        ...state,
-        loading: false,
-        error: error
-    })),
-
-    // Registration
-    on(AuthActions.registrationRequest, state => ({
-        ...state,
-        loading: true,
-        error: null
-    })),
-    on(AuthActions.registrationSuccess, (state, {user}) => ({
-        ...state,
-        user,
-        loading: false,
-        error: null
-    })),
-    on(AuthActions.registrationFailure, (state, {error}) => ({
-        ...state,
-        loading: false,
-        error: error
-    }))
+    on(AuthActions.loginActions.request, AuthActions.registrationActions.request, state => setRequest(state)),
+    on(AuthActions.loginActions.success, AuthActions.registrationActions.success, (state, {user}) => setSuccess(state, user)),
+    on(AuthActions.loginActions.failure, AuthActions.registrationActions.failure, (state, {error}) => setFailure(state, error))
 );
