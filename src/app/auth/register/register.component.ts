@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectRegistrationError, selectRegistrationDone } from "../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
 import { AuthState } from "../../state/auth/auth.reducer";
+import { Router } from "@angular/router";
 
 @Component({
     standalone: true,
@@ -31,7 +32,7 @@ export class RegisterComponent {
 
   successMessage = "נרשמת בהצלחה למערכת!";
 
-  constructor(private store: Store<AuthState>,private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
+  constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -43,7 +44,10 @@ export class RegisterComponent {
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.setSuccessDialog();
-        setTimeout(() => this.dialogRef.close(), 1500);
+        setTimeout(() => {
+          this.dialogRef.close();
+          this.router.navigate(['/login']);
+        }, 1500);
       });
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
