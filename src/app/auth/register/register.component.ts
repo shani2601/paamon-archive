@@ -13,6 +13,7 @@ import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectRegistrationError, selectRegistrationDone } from "../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
+import { AuthState } from "../../state/auth/auth.reducer";
 
 @Component({
     standalone: true,
@@ -24,15 +25,13 @@ import { first } from "rxjs/operators";
 export class RegisterComponent {
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
-  private store = inject(Store);
-
   dialogRef: any;
   registrationForm: FormGroup;
   errorMessage: string | undefined;
 
   successMessage = "נרשמת בהצלחה למערכת!";
 
-  constructor(private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
+  constructor(private store: Store<AuthState>,private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],

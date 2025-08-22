@@ -10,6 +10,7 @@ import { User } from "../../models/user.model";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectLoginError } from "../../state/auth/auth.selectors";
+import { AuthState } from "../../state/auth/auth.reducer";
 
 @Component({
     standalone: true,
@@ -19,12 +20,10 @@ import { selectLoginError } from "../../state/auth/auth.selectors";
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
-  private store = inject(Store);
-
   loginForm: FormGroup;
   loginError: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
+  constructor(private store: Store<AuthState>, private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
     this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
