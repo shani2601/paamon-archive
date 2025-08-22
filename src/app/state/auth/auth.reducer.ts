@@ -4,8 +4,8 @@ import * as AuthActions from '../auth/auth.actions';
 
 export interface AuthState {
     user: User | null;
-    loading: boolean;
-    error: string | null;
+    login: {loading: boolean;  error: string | null};
+    register: {loading: boolean; error: string | null; done: boolean};
 }
 
 export interface AppState {
@@ -14,33 +14,32 @@ export interface AppState {
 
 export const initialAuthState: AuthState = {
     user: null,
-    loading: false,
-    error: null
+    login: {loading: false, error: null},
+    register: {loading: false, error: null, done: false},
 };
-
-const setRequest = (state: AuthState): AuthState => ({
-    ...state,
-    loading: true,
-    error: null
-});
-
-const setSuccess = (state: AuthState, user: User): AuthState => ({
-    ...state,
-    user,
-    loading: false,
-    error: null
-});
-
-const setFailure = (state: AuthState, error: string): AuthState => ({
-    ...state,
-    loading: false,
-    error
-});
 
 export const authReducer = createReducer(
     initialAuthState,
-    
-    on(AuthActions.loginActions.request, AuthActions.registrationActions.request, state => setRequest(state)),
-    on(AuthActions.loginActions.success, AuthActions.registrationActions.success, (state, {user}) => setSuccess(state, user)),
-    on(AuthActions.loginActions.failure, AuthActions.registrationActions.failure, (state, {error}) => setFailure(state, error))
+
+    // Login  
+    on(AuthActions.loginActions.request, state => ({
+        ...state, login: {...state.login, loading: true, error: null}
+    })),
+    on(AuthActions.loginActions.success, (state, {user}) => ({
+        ...state, user, login: {...state.login, loading: false, error: null}
+    })),
+    on(AuthActions.loginActions.failure, (state, {error}) => ({
+        ...state, login: {...state.login, loading: false, error}
+    })),
+
+    // Registeration
+    on(AuthActions.registrationActions.request, state => ({
+        ...state, register: {...state.register, loading: true, error: null, done: false}
+    })),
+    on(AuthActions.registrationActions.success, state => ({
+        ...state, register: {...state.register, loading: false, error: null, done: true}
+    })),
+    on(AuthActions.registrationActions.failure, (state, {error}) => ({
+        ...state, register: {...state.register, loading: false, error, done: false}
+    })),
 );

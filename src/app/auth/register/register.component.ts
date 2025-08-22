@@ -9,9 +9,10 @@ import * as AuthActions from "../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
 import { User } from '../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Actions, ofType } from "@ngrx/effects";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { selectRegistrationError, selectRegistrationDone } from "../../state/auth/auth.selectors";
+import { first } from "rxjs/operators";
 
 @Component({
     standalone: true,
@@ -30,7 +31,7 @@ export class RegisterComponent {
   errorMessage: string | undefined;
   successMessage: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private actions$: Actions, private dialog: MatDialog, private destroyRef: DestroyRef) {
+  constructor(private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -39,17 +40,14 @@ export class RegisterComponent {
       passwordConfirmation: ['', Validators.required],
     });
 
-    this.actions$
-      .pipe(ofType(AuthActions.registrationActions.success), takeUntilDestroyed(this.destroyRef))
+    this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.errorMessage = undefined;
         this.setSuccessDialog();
         setTimeout(() => this.dialogRef.close(), 1500);
       });
 
-    this.actions$
-      .pipe(ofType(AuthActions.registrationActions.failure), takeUntilDestroyed(this.destroyRef))
-      .subscribe((action) => (this.errorMessage = action.error));
+    this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(err => this.errorMessage = err ?? undefined);
   }
 
   register() {
