@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import * as AuthActions from "../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
@@ -42,13 +42,7 @@ export class RegisterComponent {
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.setSuccessDialog();
-        setTimeout(() => {
-          this.dialogRef.close();
-          this.router.navigate(['/login']);
-        }, 1500);
-      });
+      .subscribe(() => {this.setSuccessDialog().afterClosed().subscribe(() => this.router.navigate(['/login']))});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.errorMessage = err ?? undefined);
@@ -75,11 +69,15 @@ export class RegisterComponent {
     this.store.dispatch(AuthActions.registrationActions.request({ user }));
   }
 
-  setSuccessDialog() {
+  setSuccessDialog(): MatDialogRef<any> {
     this.dialogRef = this.dialog.open(this.successDialog, {
       data: { message: this.successMessage },
       width: '320px',
       panelClass: 'custom-success-dialog'
     });
+
+    setTimeout(() => {this.dialogRef.close()}, 1500);
+
+    return this.dialogRef;
   }
 }
