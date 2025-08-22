@@ -18,7 +18,7 @@ import { first } from "rxjs/operators";
     standalone: true,
     selector: 'app-register',
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule, RouterLink],
-    styleUrls: ['./register.component.css'],
+    styleUrl: './register.component.css',
     templateUrl: './register.component.html'
 })
 export class RegisterComponent {

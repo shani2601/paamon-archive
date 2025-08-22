@@ -15,7 +15,7 @@ import { selectLoginError } from "../../state/auth/auth.selectors";
     standalone: true,
     selector: 'app-login',
     imports: [MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule, ReactiveFormsModule, RouterLink],
-    styleUrls: ['./login.component.css'],
+    styleUrl: './login.component.css',
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
