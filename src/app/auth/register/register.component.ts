@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import * as AuthActions from "../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
@@ -19,7 +19,7 @@ import { Router } from "@angular/router";
 @Component({
     standalone: true,
     selector: 'app-register',
-    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, RouterLink],
+    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule, RouterLink],
     styleUrl: './register.component.css',
     templateUrl: './register.component.html'
 })
