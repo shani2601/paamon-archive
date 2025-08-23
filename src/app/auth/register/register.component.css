@@ -30,45 +30,71 @@ mat-progress-spinner {
 
 .error-message {
     margin-top: 10px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
     color: rgb(214, 19, 19);
     text-align: center;
 }
 
 .login-section {
-    margin-top: 50px;
-}
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    }
 
 .have-user-title {
-    font-size: 16px;
+    font-size: 1rem;
     margin-bottom: 7px;
 }
 
 .section-container {
-    width: 400px;
-    height: 730px;
+    width: 90%;
+    max-width: 400px;
+    height: clamp(400px, 50%, 500px);
     background-color: rgb(241, 241, 231);
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 form {
-    margin-top: 30px;
+    margin-top: 4vh;
 }
 
 .divider {
-  flex-direction: row;
-  width: 100%;
-  color: rgb(174, 168, 168);
-  margin-top: 40px;
+    flex-direction: row;
+    width: 100%;
+    color: rgb(174, 168, 168);
+    margin-top: 4vh;
 }
 
 .divider::before,
 .divider::after {
-  content: '';
-  flex-grow: 1;
-  height: 1px;
-  background-color: rgb(174, 168, 168);
-  margin: 0 20px;
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background-color: rgb(174, 168, 168);
+    margin: 0 2%;
+}
+
+@media (max-height: 685px) {
+    h1 {
+        margin-top: 0vh;
+        margin-bottom: 5vh;
+        font-size: clamp(1rem, 5vw, 2rem);
+    }
+
+    mat-form-field {
+        width: 30vh;
+        height: 11vh;
+    }
+
+    .register-btn {
+        width: 5vh;
+        height: 5vh;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .divider {
+        margin-top: 3vh;
+    }
 }
