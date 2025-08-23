@@ -50,13 +50,10 @@ export class RegisterComponent {
 
   register() {
     if (this.registrationForm.invalid) {
-      if (this.registrationForm.get('password')?.errors?.['pattern']) {
-        this.errorMessage = "הסיסמה חייבת להכיל שמונה תווים לפחות, ולכלול אותיות ומספרים";
-        return;
-      }
+      this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
+        "הסיסמה חייבת להכיל שמונה תווים לפחות ולכלול אותיות ומספרים" : "יש למלא את כל השדות";
 
-      this.errorMessage = "יש למלא את כל השדות";
-      return;
+        return;
     }
 
     if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
@@ -64,9 +61,9 @@ export class RegisterComponent {
       return;
     }
 
-    const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
+    const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
     const user: User = plainedUser;
-    this.store.dispatch(AuthActions.registrationActions.request({ user }));
+    this.store.dispatch(AuthActions.registrationActions.request({user}));
   }
 
   setSuccessDialog(): MatDialogRef<any> {
