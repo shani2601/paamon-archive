@@ -13,6 +13,7 @@ import { selectLoginError, selectIsLoggedIn } from "../../../state/auth/auth.sel
 import { AuthState } from "../../../state/auth/auth.reducer";
 import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
+import { AUTH_MESSAGES } from "../auth-messages.consts";
 
 @Component({
     standalone: true,
@@ -42,7 +43,7 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.invalid) {
-      this.loginError = "יש למלא את כל השדות";
+      this.loginError = AUTH_MESSAGES.EMPTY_FORM_FIELDS;
       return;
     }
 

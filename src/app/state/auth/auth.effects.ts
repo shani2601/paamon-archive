@@ -4,6 +4,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../services/auth.service';
+import { AUTH_MESSAGES } from "../../components/auth/auth-messages.consts";
 
 @Injectable()
 export class AuthEffects {
@@ -20,7 +21,7 @@ export class AuthEffects {
               success
                 ? AuthActions.loginActions.success({ user })
                 : AuthActions.loginActions.failure({
-                    error: 'אחד או יותר מהפרטים שהזנת שגויים',
+                    error: AUTH_MESSAGES.LOGIN.WRONG_DETAILS,
                   })
             )
           )
@@ -37,7 +38,7 @@ export class AuthEffects {
               success
                 ? AuthActions.registrationActions.success({ user })
                 : AuthActions.registrationActions.failure({
-                    error: 'משתמש כבר קיים במערכת',
+                    error: AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.EXISTING_USER,
                   })
             )
           )

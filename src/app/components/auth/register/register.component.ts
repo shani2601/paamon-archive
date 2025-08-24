@@ -16,6 +16,7 @@ import { first } from "rxjs/operators";
 import { AuthState } from "../../../state/auth/auth.reducer";
 import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
+import { AUTH_MESSAGES } from "../auth-messages.consts";
 
 @Component({
     standalone: true,
@@ -28,12 +29,10 @@ export class RegisterComponent {
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
   ROUTES = ROUTES;
-
+  
   dialogRef: any;
   registrationForm: FormGroup;
   errorMessage: string | undefined;
-
-  successMessage = "נרשמת בהצלחה למערכת!";
 
   constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
@@ -54,13 +53,13 @@ export class RegisterComponent {
   register() {
     if (this.registrationForm.invalid) {
       this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
-        "הסיסמה חייבת להכיל שמונה תווים לפחות ולכלול אותיות ומספרים" : "יש למלא את כל השדות";
+        AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX : AUTH_MESSAGES.EMPTY_FORM_FIELDS;
 
         return;
     }
 
     if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
-      this.errorMessage = "סיסמאות לא תואמות";
+      this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
       return;
     }
 
@@ -71,7 +70,7 @@ export class RegisterComponent {
 
   setSuccessDialog(): MatDialogRef<any> {
     this.dialogRef = this.dialog.open(this.successDialog, {
-      data: { message: this.successMessage },
+      data: { message: AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE },
       width: '320px',
       panelClass: 'custom-success-dialog'
     });
