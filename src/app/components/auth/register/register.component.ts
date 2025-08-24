@@ -15,6 +15,7 @@ import { selectRegistrationError, selectRegistrationDone } from "../../../state/
 import { first } from "rxjs/operators";
 import { AuthState } from "../../../state/auth/auth.reducer";
 import { Router } from "@angular/router";
+import { ROUTES } from "../../../routing/routing.consts";
 
 @Component({
     standalone: true,
@@ -23,8 +24,10 @@ import { Router } from "@angular/router";
     styleUrl: './register.component.css',
     templateUrl: './register.component.html'
 })
-export class RegisterComponent {
+export class RegisterComponent {  
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
+
+  ROUTES = ROUTES;
 
   dialogRef: any;
   registrationForm: FormGroup;
@@ -42,7 +45,7 @@ export class RegisterComponent {
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {this.setSuccessDialog().afterClosed().subscribe(() => this.router.navigate(['/login']))});
+      .subscribe(() => {this.setSuccessDialog().afterClosed().subscribe(() => this.router.navigate([ROUTES.LOGIN.path]))});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.errorMessage = err ?? undefined);

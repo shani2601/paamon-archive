@@ -3,6 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectIsLoggedIn } from './auth.selectors';
 import { map, take } from 'rxjs/operators';
+import { ROUTES } from '../../routing/routing.consts';
 
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
@@ -10,6 +11,6 @@ export const authGuard: CanActivateFn = () => {
 
   return (store.select(selectIsLoggedIn).pipe(
     take(1),
-    map(isUserIn => isUserIn ? true : router.createUrlTree(['/login']))
+    map(isUserIn => isUserIn ? true : router.createUrlTree([ROUTES.LOGIN.path]))
   ));
 };

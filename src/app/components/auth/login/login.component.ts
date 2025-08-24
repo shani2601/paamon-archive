@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectLoginError } from "../../../state/auth/auth.selectors";
 import { AuthState } from "../../../state/auth/auth.reducer";
+import { ROUTES } from "../../../routing/routing.consts";
 
 @Component({
     standalone: true,
@@ -20,6 +21,8 @@ import { AuthState } from "../../../state/auth/auth.reducer";
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
+  ROUTES = ROUTES;
+
   loginForm: FormGroup;
   loginError: string | undefined;
 

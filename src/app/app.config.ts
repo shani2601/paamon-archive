@@ -5,7 +5,7 @@ import { authReducer } from './state/auth/auth.reducer';
 import { AuthEffects } from './state/auth/auth.effects';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
+import { routes } from './routing/app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
