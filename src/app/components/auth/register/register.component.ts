@@ -29,7 +29,7 @@ export class RegisterComponent {
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
   ROUTES = ROUTES;
-  
+  successMessage = AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE;
   dialogRef: any;
   registrationForm: FormGroup;
   errorMessage: string | undefined;
@@ -44,33 +44,30 @@ export class RegisterComponent {
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {this.setSuccessDialog().afterClosed().subscribe(() => this.router.navigate([ROUTES.LOGIN.path]))});
+      .subscribe(() => {this.setSuccessDialog().afterClosed()
+        .subscribe(() => this.router.navigate([ROUTES.LOGIN.path]))});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(err => this.errorMessage = err ?? undefined);
+      .subscribe(err => this.errorMessage = err ?? "");
   }
 
   register() {
     if (this.registrationForm.invalid) {
       this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
         AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX : AUTH_MESSAGES.EMPTY_FORM_FIELDS;
-
-        return;
     }
-
-    if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+    else if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
       this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
-      return;
     }
-
-    const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
-    const user: User = plainedUser;
-    this.store.dispatch(AuthActions.registrationActions.request({user}));
+    else {
+      const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
+      const user: User = plainedUser;
+      this.store.dispatch(AuthActions.registrationActions.request({user}));
+    }
   }
 
   setSuccessDialog(): MatDialogRef<any> {
     this.dialogRef = this.dialog.open(this.successDialog, {
-      data: { message: AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE },
       width: '320px',
       panelClass: 'custom-success-dialog'
     });
