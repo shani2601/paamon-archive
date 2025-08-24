@@ -17,7 +17,7 @@ export class AuthService {
   register(user: User): boolean {
     const currentUsers = this.users$.value;
 
-    if (currentUsers.some((u) => u.username === user.username)) {
+    if (currentUsers.some((possibleUser) => possibleUser.username === user.username)) {
       return false;
     } else {        
       user = {
