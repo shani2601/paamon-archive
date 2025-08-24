@@ -33,9 +33,9 @@ export class AuthService {
 
   login(user: User): boolean {
     const matchedUser = this.users$.value.find(
-      (u) =>
-        u.username === user.username &&
-        bcrypt.compareSync(user.password, u.password)
+      (possibleUser) =>
+        possibleUser.username === user.username &&
+        bcrypt.compareSync(user.password, possibleUser.password)
     );
     return !!matchedUser;
   }
