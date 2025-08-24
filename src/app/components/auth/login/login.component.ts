@@ -9,8 +9,9 @@ import * as AuthActions from "../../../state/auth/auth.actions";
 import { User } from "../../../models/user.model";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { selectLoginError } from "../../../state/auth/auth.selectors";
+import { selectLoginError, selectIsLoggedIn } from "../../../state/auth/auth.selectors";
 import { AuthState } from "../../../state/auth/auth.reducer";
+import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
 
 @Component({
@@ -26,11 +27,14 @@ export class LoginComponent {
   loginForm: FormGroup;
   loginError: string | undefined;
 
-  constructor(private store: Store<AuthState>, private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
+  constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
     this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.store.select(selectIsLoggedIn).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.router.navigate([ROUTES.HOME.path]));
 
     this.store.select(selectLoginError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.loginError = err ?? undefined);
