@@ -5,12 +5,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import { Store } from "@ngrx/store";
-import * as AuthActions from "../../state/auth/auth.actions";
-import { User } from "../../models/user.model";
+import * as AuthActions from "../../../state/auth/auth.actions";
+import { User } from "../../../models/user.model";
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { selectLoginError } from "../../state/auth/auth.selectors";
-import { AuthState } from "../../state/auth/auth.reducer";
+import { selectLoginError, selectIsLoggedIn } from "../../../state/auth/auth.selectors";
+import { AuthState } from "../../../state/auth/auth.reducer";
+import { Router } from "@angular/router";
+import { ROUTES } from "../../../routing/routing.consts";
+import { AUTH_MESSAGES } from "../auth-messages.consts";
 
 @Component({
     standalone: true,
@@ -20,14 +23,19 @@ import { AuthState } from "../../state/auth/auth.reducer";
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
+  ROUTES = ROUTES;
+
   loginForm: FormGroup;
   loginError: string | undefined;
 
-  constructor(private store: Store<AuthState>, private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
+  constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private destroyRef: DestroyRef) {
     this.loginForm = this.formBuilder.nonNullable.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.store.select(selectIsLoggedIn).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.router.navigate([ROUTES.HOME.path]));
 
     this.store.select(selectLoginError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.loginError = err ?? undefined);
@@ -35,7 +43,7 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.invalid) {
-      this.loginError = "יש למלא את כל השדות";
+      this.loginError = AUTH_MESSAGES.EMPTY_FORM_FIELDS;
       return;
     }
 

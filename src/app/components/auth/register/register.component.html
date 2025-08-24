@@ -1,4 +1,4 @@
-<main>
+<main class="register-container">
     <h1>הרשמה למערכת</h1>
     <div class="section-container">
         <form [formGroup]="registrationForm">
@@ -33,7 +33,7 @@
 
         <div class="login-section">
             <label class="have-user-title">יש לך משתמש?</label>
-            <button mat-stroked-button class="login-btn" type="button" routerLink="/login">התחבר</button>
+            <button mat-stroked-button class="login-btn" type="button" [routerLink]="[ROUTES.LOGIN.path]">התחבר</button>
         </div>
     </div>
 </main>

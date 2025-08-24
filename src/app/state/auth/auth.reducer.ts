@@ -8,11 +8,7 @@ export interface AuthState {
     register: {loading: boolean; error: string | null; done: boolean};
 }
 
-export interface AppState {
-    auth: AuthState;
-}
-
-export const initialAuthState: AuthState = {
+const initialAuthState: AuthState = {
     user: null,
     login: {loading: false, error: null},
     register: {loading: false, error: null, done: false},

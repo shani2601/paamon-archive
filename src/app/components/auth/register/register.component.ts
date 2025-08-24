@@ -5,16 +5,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import * as AuthActions from "../../state/auth/auth.actions";
+import * as AuthActions from "../../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
-import { User } from '../../models/user.model';
+import { User } from '../../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { selectRegistrationError, selectRegistrationDone } from "../../state/auth/auth.selectors";
+import { selectRegistrationError, selectRegistrationDone } from "../../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
-import { AuthState } from "../../state/auth/auth.reducer";
+import { AuthState } from "../../../state/auth/auth.reducer";
 import { Router } from "@angular/router";
+import { ROUTES } from "../../../routing/routing.consts";
+import { AUTH_MESSAGES } from "../auth-messages.consts";
 
 @Component({
     standalone: true,
@@ -23,14 +25,14 @@ import { Router } from "@angular/router";
     styleUrl: './register.component.css',
     templateUrl: './register.component.html'
 })
-export class RegisterComponent {
+export class RegisterComponent {  
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
+  ROUTES = ROUTES;
+  successMessage = AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE;
   dialogRef: any;
   registrationForm: FormGroup;
   errorMessage: string | undefined;
-
-  successMessage = "נרשמת בהצלחה למערכת!";
 
   constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
@@ -42,36 +44,30 @@ export class RegisterComponent {
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {this.setSuccessDialog().afterClosed().subscribe(() => this.router.navigate(['/login']))});
+      .subscribe(() => {this.setSuccessDialog().afterClosed()
+        .subscribe(() => this.router.navigate([ROUTES.LOGIN.path]))});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(err => this.errorMessage = err ?? undefined);
+      .subscribe(err => this.errorMessage = err ?? "");
   }
 
   register() {
     if (this.registrationForm.invalid) {
-      if (this.registrationForm.get('password')?.errors?.['pattern']) {
-        this.errorMessage = "הסיסמה חייבת להכיל שמונה תווים לפחות, ולכלול אותיות ומספרים";
-        return;
-      }
-
-      this.errorMessage = "יש למלא את כל השדות";
-      return;
+      this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
+        AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX : AUTH_MESSAGES.EMPTY_FORM_FIELDS;
     }
-
-    if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
-      this.errorMessage = "סיסמאות לא תואמות";
-      return;
+    else if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+      this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
     }
-
-    const { passwordConfirmation: passwordConfirmation, ...plainedUser } = this.registrationForm.value;
-    const user: User = plainedUser;
-    this.store.dispatch(AuthActions.registrationActions.request({ user }));
+    else {
+      const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
+      const user: User = plainedUser;
+      this.store.dispatch(AuthActions.registrationActions.request({user}));
+    }
   }
 
   setSuccessDialog(): MatDialogRef<any> {
     this.dialogRef = this.dialog.open(this.successDialog, {
-      data: { message: this.successMessage },
       width: '320px',
       panelClass: 'custom-success-dialog'
     });

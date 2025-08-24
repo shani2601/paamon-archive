@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { AUTH_MESSAGES } from "../../components/auth/auth-messages.consts";
 
 @Injectable()
 export class AuthEffects {
   loginRequest$;
-  navigateOnLoginSuccess$;
   registrationRequest$;
 
-  constructor(private router: Router, private actions$: Actions, private authService: AuthService) {
+  constructor(private actions$: Actions, private authService: AuthService) {
     this.loginRequest$ = createEffect(() =>
       this.actions$.pipe(
         ofType(AuthActions.loginActions.request),
@@ -22,19 +21,12 @@ export class AuthEffects {
               success
                 ? AuthActions.loginActions.success({ user })
                 : AuthActions.loginActions.failure({
-                    error: 'אחד או יותר מהפרטים שהזנת שגויים',
+                    error: AUTH_MESSAGES.LOGIN.WRONG_DETAILS,
                   })
             )
           )
         )
       )
-    );
-
-    this.navigateOnLoginSuccess$ = createEffect(() =>
-        this.actions$.pipe(
-          ofType(AuthActions.loginActions.success),
-          tap(() => this.router.navigate(['/home']))
-        ), { dispatch: false }
     );
 
     this.registrationRequest$ = createEffect(() =>
@@ -46,7 +38,7 @@ export class AuthEffects {
               success
                 ? AuthActions.registrationActions.success({ user })
                 : AuthActions.registrationActions.failure({
-                    error: 'משתמש כבר קיים במערכת',
+                    error: AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.EXISTING_USER,
                   })
             )
           )

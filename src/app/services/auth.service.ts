@@ -17,7 +17,7 @@ export class AuthService {
   register(user: User): boolean {
     const currentUsers = this.users$.value;
 
-    if (currentUsers.some((u) => u.username === user.username)) {
+    if (currentUsers.some((possibleUser) => possibleUser.username === user.username)) {
       return false;
     } else {        
       user = {
@@ -33,9 +33,9 @@ export class AuthService {
 
   login(user: User): boolean {
     const matchedUser = this.users$.value.find(
-      (u) =>
-        u.username === user.username &&
-        bcrypt.compareSync(user.password, u.password)
+      (possibleUser) =>
+        possibleUser.username === user.username &&
+        bcrypt.compareSync(user.password, possibleUser.password)
     );
     return !!matchedUser;
   }
