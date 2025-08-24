@@ -5,15 +5,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import * as AuthActions from "../../state/auth/auth.actions";
+import * as AuthActions from "../../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
-import { User } from '../../models/user.model';
+import { User } from '../../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { selectRegistrationError, selectRegistrationDone } from "../../state/auth/auth.selectors";
+import { selectRegistrationError, selectRegistrationDone } from "../../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
-import { AuthState } from "../../state/auth/auth.reducer";
+import { AuthState } from "../../../state/auth/auth.reducer";
 import { Router } from "@angular/router";
 
 @Component({
