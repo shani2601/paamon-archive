@@ -1,0 +1,12 @@
+.coming-soon-page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coming-soon-img {
+  width: 60%;
+  height: 70%;
+}
