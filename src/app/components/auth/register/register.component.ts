@@ -9,12 +9,11 @@ import * as AuthActions from "../../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
 import { User } from '../../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectRegistrationError, selectRegistrationDone } from "../../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
 import { AuthState } from "../../../state/auth/auth.reducer";
-import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
 import { AUTH_MESSAGES } from "../auth-messages.consts";
 
@@ -45,7 +44,10 @@ export class RegisterComponent {
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {this.setSuccessDialog().afterClosed()
-        .subscribe(() => this.router.navigate([ROUTES.LOGIN.path]))});
+        .subscribe(() => {
+          this.store.dispatch(AuthActions.resetRegistration());
+          this.router.navigate([ROUTES.LOGIN.path]);
+        })});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.errorMessage = err ?? "");

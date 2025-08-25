@@ -18,5 +18,7 @@ function createAuthActions(actionKind: string) {
   };
 }
 
+export const resetRegistration = createAction('[Auth] Reset Registration');
+
 export const loginActions = createAuthActions('Login');
 export const registrationActions = createAuthActions('Registration');
