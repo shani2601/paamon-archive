@@ -17,11 +17,12 @@ import { AuthState } from "../../../state/auth/auth.reducer";
 import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
 import { AUTH_MESSAGES } from "../auth-messages.consts";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     standalone: true,
     selector: 'app-register',
-    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule, RouterLink],
+    imports: [MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, CommonModule, MatProgressSpinnerModule, MatDialogModule, RouterLink],
     styleUrl: './register.component.css',
     templateUrl: './register.component.html'
 })
@@ -29,6 +30,8 @@ export class RegisterComponent {
   @ViewChild('successDialog') successDialog!: TemplateRef<any>;
 
   ROUTES = ROUTES;
+  hidePassword = true;
+  hidePasswordConfirmation  = true;
   successMessage = AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE;
   dialogRef: any;
   registrationForm: FormGroup;
@@ -51,19 +54,27 @@ export class RegisterComponent {
       .subscribe(err => this.errorMessage = err ?? "");
   }
 
+  isFieldNotEmpty(fieldName: string) {
+    return (Boolean(this.registrationForm.get(fieldName)?.value));
+  }
+
   register() {
     if (this.registrationForm.invalid) {
       this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
         AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX : AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+
+        return;
     }
-    else if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+
+    if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
       this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
+
+      return;
     }
-    else {
-      const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
-      const user: User = plainedUser;
-      this.store.dispatch(AuthActions.registrationActions.request({user}));
-    }
+
+    const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
+    const user: User = plainedUser;
+    this.store.dispatch(AuthActions.registrationActions.request({user}));
   }
 
   setSuccessDialog(): MatDialogRef<any> {

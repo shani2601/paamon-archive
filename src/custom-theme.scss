@@ -28,3 +28,8 @@ html {
 .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
   stroke: rgb(212, 175, 55) !important;
 }
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
