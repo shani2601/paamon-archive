@@ -41,6 +41,10 @@ export class LoginComponent {
       .subscribe(err => this.loginError = err ?? "");
   }
 
+  ngOnDestroy() {
+    this.store.dispatch(AuthActions.loginActions.reset());
+  }
+
   isFieldNotEmpty(fieldName: string) {
     return (Boolean(this.loginForm.get(fieldName)?.value));
   }

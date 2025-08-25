@@ -27,6 +27,9 @@ export const authReducer = createReducer(
     on(AuthActions.loginActions.failure, (state, {error}) => ({
         ...state, login: {loading: false, error}
     })),
+    on(AuthActions.loginActions.reset, state => ({
+        ...state, login: {loading: false, error: null}
+    })),
 
     // Registration
     on(AuthActions.registrationActions.request, state => ({
@@ -38,7 +41,7 @@ export const authReducer = createReducer(
     on(AuthActions.registrationActions.failure, (state, {error}) => ({
         ...state, register: {loading: false, error, done: false}
     })),
-    on(AuthActions.resetRegistration, state => ({
+    on(AuthActions.registrationActions.reset, state => ({
         ...state, register: {loading: false, error: null, done: false}
     }))
 );

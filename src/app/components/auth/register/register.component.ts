@@ -48,12 +48,15 @@ export class RegisterComponent {
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {this.setSuccessDialog().afterClosed()
         .subscribe(() => {
-          this.store.dispatch(AuthActions.resetRegistration());
           this.router.navigate([ROUTES.LOGIN.path]);
         })});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.errorMessage = err ?? "");
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(AuthActions.registrationActions.reset());
   }
 
   isFieldNotEmpty(fieldName: string) {

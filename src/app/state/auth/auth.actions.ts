@@ -15,10 +15,11 @@ function createAuthActions(actionKind: string) {
       `[Auth] ${actionKind} Failure`,
       props<{ error: string }>()
     ),
+    reset: createAction(
+      `[Auth] ${actionKind} Reset`
+    )
   };
 }
-
-export const resetRegistration = createAction('[Auth] Reset Registration');
 
 export const loginActions = createAuthActions('Login');
 export const registrationActions = createAuthActions('Registration');
