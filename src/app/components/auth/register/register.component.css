@@ -5,7 +5,7 @@
     padding: 2rem;
 }
 
-h1 {
+.register-page-title {
     margin-top: 30px;
     margin-bottom: 40px;
     font-size: 40px;
@@ -78,16 +78,12 @@ mat-icon {
     margin-bottom: 7px;
 }
 
-button {
-    font-size: 14px;
-}
-
 mat-progress-spinner {
     margin-top: 25px;
 }
 
 @media (max-height: 685px) {
-    h1 {
+    .register-page-title {
         margin-top: 0vh;
         margin-bottom: 5vh;
         font-size: clamp(1rem, 5vw, 2rem);
@@ -99,6 +95,13 @@ mat-progress-spinner {
     }
 
     .register-btn {
+        width: 5vh;
+        height: 5vh;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .login-btn {
         width: 5vh;
         height: 5vh;
         font-size: 13px;
