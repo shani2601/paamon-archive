@@ -7,11 +7,10 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angula
 import { Store } from "@ngrx/store";
 import * as AuthActions from "../../../state/auth/auth.actions";
 import { User } from "../../../models/user.model";
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectLoginError, selectIsLoggedIn } from "../../../state/auth/auth.selectors";
 import { AuthState } from "../../../state/auth/auth.reducer";
-import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
 import { AUTH_MESSAGES } from "../auth-messages.consts";
 
