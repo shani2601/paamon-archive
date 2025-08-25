@@ -12,10 +12,16 @@
                 <input formControlName="username" matInput placeholder="שם משתמש">
             </mat-form-field>
             <mat-form-field>
-                <input formControlName="password" type="password" matInput placeholder="סיסמה">
+                <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" matInput placeholder="סיסמה">
+                <button *ngIf="isFieldNotEmpty('password')" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                    <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
             </mat-form-field>
             <mat-form-field>
-                <input formControlName="passwordConfirmation" type="password" matInput placeholder="אישור סיסמה">
+                <input [type]="hidePasswordConfirmation ? 'password' : 'text'" formControlName="passwordConfirmation" matInput placeholder="אישור סיסמה">
+                <button *ngIf="isFieldNotEmpty('passwordConfirmation')" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" type="button">
+                    <mat-icon>{{ hidePasswordConfirmation ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
             </mat-form-field>
             <button mat-stroked-button class="register-btn" type="button" (click)="register()">הירשם</button>
 

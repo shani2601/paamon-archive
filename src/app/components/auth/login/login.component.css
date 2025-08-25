@@ -27,6 +27,14 @@ form {
     align-items: center;
 }
 
+mat-form-field {
+  width: 55%;
+}
+
+mat-icon {
+    font-size: 20px;
+}
+
 .login-btn {
     margin-top: 15px;
 }

@@ -13,17 +13,18 @@ import { selectLoginError, selectIsLoggedIn } from "../../../state/auth/auth.sel
 import { AuthState } from "../../../state/auth/auth.reducer";
 import { ROUTES } from "../../../routing/routing.consts";
 import { AUTH_MESSAGES } from "../auth-messages.consts";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     standalone: true,
     selector: 'app-login',
-    imports: [MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule, ReactiveFormsModule, RouterLink],
+    imports: [MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule, ReactiveFormsModule, RouterLink],
     styleUrl: './login.component.css',
     templateUrl: './login.component.html'
 })
 export class LoginComponent {
   ROUTES = ROUTES;
-
+  hide = true;
   loginForm: FormGroup;
   loginError: string | undefined;
 
@@ -37,7 +38,11 @@ export class LoginComponent {
       .subscribe(() => this.router.navigate([ROUTES.HOME.path]));
 
     this.store.select(selectLoginError).pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(err => this.loginError = err ?? undefined);
+      .subscribe(err => this.loginError = err ?? "");
+  }
+
+  isFieldNotEmpty(fieldName: string) {
+    return (Boolean(this.loginForm.get(fieldName)?.value));
   }
 
   login() {
