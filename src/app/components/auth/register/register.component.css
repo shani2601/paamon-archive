@@ -27,6 +27,14 @@ form {
     align-items: center;
 }
 
+mat-form-field {
+  width: 55%;
+}
+
+mat-icon {
+    font-size: 20px;
+}
+
 .register-btn {
     margin-top: 15px;
 }
@@ -75,7 +83,7 @@ button {
 }
 
 mat-progress-spinner {
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 @media (max-height: 685px) {
