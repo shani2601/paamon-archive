@@ -9,12 +9,11 @@ import * as AuthActions from "../../../state/auth/auth.actions";
 import { Store } from "@ngrx/store";
 import { User } from '../../../models/user.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectRegistrationError, selectRegistrationDone } from "../../../state/auth/auth.selectors";
 import { first } from "rxjs/operators";
 import { AuthState } from "../../../state/auth/auth.reducer";
-import { Router } from "@angular/router";
 import { ROUTES } from "../../../routing/routing.consts";
 import { AUTH_MESSAGES } from "../auth-messages.consts";
 import { MatIconModule } from '@angular/material/icon';
@@ -48,27 +47,39 @@ export class RegisterComponent {
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {this.setSuccessDialog().afterClosed()
-        .subscribe(() => this.router.navigate([ROUTES.LOGIN.path]))});
+        .subscribe(() => {
+          this.router.navigate([ROUTES.LOGIN.path]);
+        })});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(err => this.errorMessage = err ?? "");
   }
 
-  isFieldNotEmpty(fieldName: string) {
+  ngOnDestroy() {
+    this.store.dispatch(AuthActions.registrationActions.reset());
+  }
+
+  isFieldNotEmpty(fieldName: string): boolean {
     return (Boolean(this.registrationForm.get(fieldName)?.value));
   }
 
-  register() {
-    if (this.registrationForm.invalid) {
-      this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
-        AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX : AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+  areThereEmptyFields(): boolean {
+    return (Object.keys(this.registrationForm.controls).some(name => !(this.isFieldNotEmpty(name))));
+  }
 
-        return;
+  register() {
+    if (this.areThereEmptyFields()) {
+      this.errorMessage = AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+      return;
+    }
+
+    if (this.registrationForm.get('password')?.errors?.['pattern']) {
+      this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX;
+      return;
     }
 
     if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
       this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
-
       return;
     }
 

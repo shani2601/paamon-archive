@@ -19,23 +19,29 @@ export const authReducer = createReducer(
 
     // Login  
     on(AuthActions.loginActions.request, state => ({
-        ...state, login: {...state.login, loading: true, error: null}
+        ...state, login: {loading: true, error: null}
     })),
     on(AuthActions.loginActions.success, (state, {user}) => ({
-        ...state, user, login: {...state.login, loading: false, error: null}
+        ...state, user, login: {loading: false, error: null}
     })),
     on(AuthActions.loginActions.failure, (state, {error}) => ({
-        ...state, login: {...state.login, loading: false, error}
+        ...state, login: {loading: false, error}
+    })),
+    on(AuthActions.loginActions.reset, state => ({
+        ...state, login: {loading: false, error: null}
     })),
 
-    // Registeration
+    // Registration
     on(AuthActions.registrationActions.request, state => ({
-        ...state, register: {...state.register, loading: true, error: null, done: false}
+        ...state, register: {loading: true, error: null, done: false}
     })),
     on(AuthActions.registrationActions.success, state => ({
-        ...state, register: {...state.register, loading: false, error: null, done: true}
+        ...state, register: {loading: false, error: null, done: true}
     })),
     on(AuthActions.registrationActions.failure, (state, {error}) => ({
-        ...state, register: {...state.register, loading: false, error, done: false}
+        ...state, register: {loading: false, error, done: false}
     })),
+    on(AuthActions.registrationActions.reset, state => ({
+        ...state, register: {loading: false, error: null, done: false}
+    }))
 );

@@ -5,7 +5,7 @@
     padding: 2rem;
 }
 
-h1 {
+.login-page-title {
     margin-top: 8vh;
     margin-bottom: 8vh;
     font-size: clamp(2rem, 5vw, 3rem);
@@ -77,12 +77,8 @@ mat-icon {
     font-size: 1rem;
 }
 
-button {
-    font-size: 14px;
-}
-
 @media (max-height: 685px) {
-    h1 {
+    .login-page-title {
         margin-top: 5vh;
         margin-bottom: 5vh;
         font-size: clamp(1rem, 5vw, 2rem);
@@ -94,6 +90,13 @@ button {
     }
 
     .login-btn {
+        width: 5vh;
+        height: 5vh;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .register-btn {
         width: 5vh;
         height: 5vh;
         font-size: 13px;

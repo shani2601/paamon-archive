@@ -15,6 +15,9 @@ function createAuthActions(actionKind: string) {
       `[Auth] ${actionKind} Failure`,
       props<{ error: string }>()
     ),
+    reset: createAction(
+      `[Auth] ${actionKind} Reset`
+    )
   };
 }
 
