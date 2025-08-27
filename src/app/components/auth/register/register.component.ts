@@ -59,21 +59,27 @@ export class RegisterComponent {
     this.store.dispatch(AuthActions.registrationActions.reset());
   }
 
-  isFieldNotEmpty(fieldName: string) {
+  isFieldNotEmpty(fieldName: string): boolean {
     return (Boolean(this.registrationForm.get(fieldName)?.value));
   }
 
-  register() {
-    if (this.registrationForm.invalid) {
-      this.errorMessage = (this.registrationForm.get('password')?.errors?.['pattern']) ?
-        AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX : AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+  areThereEmptyFields(): boolean {
+    return (Object.keys(this.registrationForm.controls).some(name => !(this.isFieldNotEmpty(name))));
+  }
 
-        return;
+  register() {
+    if (this.areThereEmptyFields()) {
+      this.errorMessage = AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+      return;
+    }
+
+    if (this.registrationForm.get('password')?.errors?.['pattern']) {
+      this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX;
+      return;
     }
 
     if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
       this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
-
       return;
     }
 
