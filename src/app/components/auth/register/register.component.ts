@@ -34,25 +34,25 @@ export class RegisterComponent {
   successMessage = AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE;
   dialogRef: any;
   registrationForm: FormGroup;
-  errorMessage: string | undefined;
+  registerError: string | undefined;
 
   constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
-      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-zא-ת]{2,}$/)]],
-      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-zא-ת]{2,}$/)]],
+      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-zא-ת]+(?:[ -][A-Za-zא-ת]+)*$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-zא-ת]+(?:[ -][A-Za-zא-ת]+)*$/)]],
       username: ['', [Validators.required, Validators.pattern(/^(?=.{3,}$)[A-Za-z0-9]+$/)]],
       password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/)]],
       passwordConfirmation: ['', Validators.required],
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {this.setSuccessDialog().afterClosed()
-        .subscribe(() => {
-          this.router.navigate([ROUTES.LOGIN.path]);
-        })});
+      .subscribe(() => {
+        this.registerError = '';
+        this.setSuccessDialog().afterClosed().subscribe(() => {this.router.navigate([ROUTES.LOGIN.path])}
+      )});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(err => this.errorMessage = err ?? "");
+      .subscribe(err => this.registerError = err ?? "");
   }
 
   ngOnDestroy(): void {
@@ -92,7 +92,7 @@ export class RegisterComponent {
     const error = this.getRegisterError();
 
     if (error) {
-      this.errorMessage = error;
+      this.registerError = error;
       return;
     }
 
