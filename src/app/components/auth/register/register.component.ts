@@ -34,28 +34,28 @@ export class RegisterComponent {
   successMessage = AUTH_MESSAGES.REGISTER.SUCCESS_MESSAGE;
   dialogRef: any;
   registrationForm: FormGroup;
-  errorMessage: string | undefined;
+  registerError: string | undefined;
 
   constructor(private store: Store<AuthState>, private router: Router, private formBuilder: FormBuilder, private dialog: MatDialog, private destroyRef: DestroyRef) {
     this.registrationForm = this.formBuilder.nonNullable.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      username: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern(/^[A-Za-zא-ת]+(?:[ -][A-Za-zא-ת]+)*$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[A-Za-zא-ת]+(?:[ -][A-Za-zא-ת]+)*$/)]],
+      username: ['', [Validators.required, Validators.pattern(/^(?=.{3,}$)[A-Za-z0-9]+$/)]],
       password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/)]],
       passwordConfirmation: ['', Validators.required],
     });
 
     this.store.select(selectRegistrationDone).pipe(first(isDone => isDone), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {this.setSuccessDialog().afterClosed()
-        .subscribe(() => {
-          this.router.navigate([ROUTES.LOGIN.path]);
-        })});
+      .subscribe(() => {
+        this.registerError = '';
+        this.setSuccessDialog().afterClosed().subscribe(() => {this.router.navigate([ROUTES.LOGIN.path])}
+      )});
 
     this.store.select(selectRegistrationError).pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(err => this.errorMessage = err ?? "");
+      .subscribe(err => this.registerError = err ?? "");
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.store.dispatch(AuthActions.registrationActions.reset());
   }
 
@@ -63,27 +63,40 @@ export class RegisterComponent {
     return (Boolean(this.registrationForm.get(fieldName)?.value));
   }
 
-  areThereEmptyFields(): boolean {
-    return (Object.keys(this.registrationForm.controls).some(name => !(this.isFieldNotEmpty(name))));
+  private getRegisterError(): string | null{
+    if (Object.keys(this.registrationForm.controls).some(name => !(this.isFieldNotEmpty(name)))) {
+      return AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+    }
+    
+    if (this.registrationForm.get('password')?.errors?.['pattern']) {
+      return AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX;
+    }
+    
+    if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
+      return AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
+    }
+    
+    if (this.registrationForm.get('firstName')?.errors?.['pattern'] || 
+        this.registrationForm.get('lastName')?.errors?.['pattern']) {
+      return AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_NAME_REGEX;
+    }
+    
+    if (this.registrationForm.get('username')?.errors?.['pattern']) {
+      return AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_USERNAME_REGEX;
+    }
+
+    return null;
   }
 
-  register() {
-    if (this.areThereEmptyFields()) {
-      this.errorMessage = AUTH_MESSAGES.EMPTY_FORM_FIELDS;
+  register(): void {
+    const error = this.getRegisterError();
+
+    if (error) {
+      this.registerError = error;
       return;
     }
 
-    if (this.registrationForm.get('password')?.errors?.['pattern']) {
-      this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.INVALID_PASSWORD_REGEX;
-      return;
-    }
-
-    if (this.registrationForm.value.password !== this.registrationForm.value.passwordConfirmation) {
-      this.errorMessage = AUTH_MESSAGES.REGISTER.ERROR_MESSAGES.UNMATCHED_PASSWORDS;
-      return;
-    }
-
-    const {passwordConfirmation: passwordConfirmation, ...plainedUser} = this.registrationForm.value;
+    const {passwordConfirmation, ...plainedUser} = this.registrationForm.value;
     const user: User = plainedUser;
     this.store.dispatch(AuthActions.registrationActions.request({user}));
   }
