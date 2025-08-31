@@ -33,3 +33,7 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
+
+.mdc-text-field .mat-mdc-form-field-required-marker {
+  display: none;
+}
