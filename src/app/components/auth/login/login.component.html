@@ -3,11 +3,11 @@
     <div class="section-container">
         <form [formGroup]="loginForm" (ngSubmit)="login()">
             <mat-form-field>
-                <mat-label class="placeholder">שם משתמש</mat-label>
+                <mat-label>שם משתמש</mat-label>
                 <input formControlName="username" matInput>
             </mat-form-field>
             <mat-form-field>
-                <mat-label class="placeholder">סיסמה</mat-label>
+                <mat-label>סיסמה</mat-label>
                 <input [type]="hide ? 'password' : 'text'" formControlName="password" matInput>
                 <button *ngIf="isFieldNotEmpty('password')" mat-icon-button matSuffix (click)="hide = !hide" type="button">
                     <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>

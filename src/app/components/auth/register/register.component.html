@@ -3,26 +3,26 @@
     <div class="section-container">
         <form [formGroup]="registrationForm" (ngSubmit)="register()">
             <mat-form-field>
-                <mat-label class="placeholder">שם פרטי</mat-label>
+                <mat-label>שם פרטי</mat-label>
                 <input formControlName="firstName" matInput>
             </mat-form-field>
             <mat-form-field>
-                <mat-label class="placeholder">שם משפחה</mat-label>
+                <mat-label>שם משפחה</mat-label>
                 <input formControlName="lastName" matInput>
             </mat-form-field>
             <mat-form-field>
-                <mat-label class="placeholder">שם משתמש</mat-label>
+                <mat-label>שם משתמש</mat-label>
                 <input formControlName="username" matInput>
             </mat-form-field>
             <mat-form-field>
-                <mat-label class="placeholder">סיסמה</mat-label>
+                <mat-label>סיסמה</mat-label>
                 <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" matInput>
                 <button *ngIf="isFieldNotEmpty('password')" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
                     <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
             </mat-form-field>
             <mat-form-field>
-                <mat-label class="placeholder">אישור סיסמה</mat-label>
+                <mat-label>אישור סיסמה</mat-label>
                 <input [type]="hidePasswordConfirmation ? 'password' : 'text'" formControlName="passwordConfirmation" matInput>
                 <button *ngIf="isFieldNotEmpty('passwordConfirmation')" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" type="button">
                     <mat-icon>{{ hidePasswordConfirmation ? 'visibility_off' : 'visibility' }}</mat-icon>
