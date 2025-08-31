@@ -1,29 +1,34 @@
 <main class="register-container">
     <h1 class="register-page-title">הרשמה למערכת</h1>
     <div class="section-container">
-        <form [formGroup]="registrationForm">
+        <form [formGroup]="registrationForm" (ngSubmit)="register()">
             <mat-form-field>
-                <input formControlName="firstName" matInput placeholder="שם פרטי">
+                <mat-label>שם פרטי</mat-label>
+                <input formControlName="firstName" matInput>
             </mat-form-field>
             <mat-form-field>
-                <input formControlName="lastName" matInput placeholder="שם משפחה">
+                <mat-label>שם משפחה</mat-label>
+                <input formControlName="lastName" matInput>
             </mat-form-field>
             <mat-form-field>
-                <input formControlName="username" matInput placeholder="שם משתמש">
+                <mat-label>שם משתמש</mat-label>
+                <input formControlName="username" matInput>
             </mat-form-field>
             <mat-form-field>
-                <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" matInput placeholder="סיסמה">
+                <mat-label>סיסמה</mat-label>
+                <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" matInput>
                 <button *ngIf="isFieldNotEmpty('password')" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
                     <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
             </mat-form-field>
             <mat-form-field>
-                <input [type]="hidePasswordConfirmation ? 'password' : 'text'" formControlName="passwordConfirmation" matInput placeholder="אישור סיסמה">
+                <mat-label>אישור סיסמה</mat-label>
+                <input [type]="hidePasswordConfirmation ? 'password' : 'text'" formControlName="passwordConfirmation" matInput>
                 <button *ngIf="isFieldNotEmpty('passwordConfirmation')" mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" type="button">
                     <mat-icon>{{ hidePasswordConfirmation ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-stroked-button class="register-btn" type="button" (click)="register()">הירשם</button>
+            <button mat-stroked-button class="register-btn" type="submit">הירשם</button>
 
             <label class="error-message">{{ registerError }}</label>
 
