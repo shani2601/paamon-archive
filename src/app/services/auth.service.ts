@@ -27,6 +27,7 @@ export class AuthService {
       const updatedUsers = [...currentUsers, user];
       this.users$.next(updatedUsers);
       this.localStorageService.saveUsersToStorage(updatedUsers);
+      
       return true;
     }
   }
@@ -37,6 +38,7 @@ export class AuthService {
         possibleUser.username === user.username &&
         bcrypt.compareSync(user.password, possibleUser.password)
     );
+
     return !!matchedUser;
   }
 
