@@ -1,7 +1,7 @@
 <main class="register-container">
     <h1 class="register-page-title">הרשמה למערכת</h1>
     <div class="section-container">
-        <form [formGroup]="registrationForm">
+        <form [formGroup]="registrationForm" (ngSubmit)="register()">
             <mat-form-field>
                 <mat-label class="placeholder">שם פרטי</mat-label>
                 <input formControlName="firstName" matInput>
@@ -28,7 +28,7 @@
                     <mat-icon>{{ hidePasswordConfirmation ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-stroked-button class="register-btn" type="button" (click)="register()">הירשם</button>
+            <button mat-stroked-button class="register-btn" type="submit">הירשם</button>
 
             <label class="error-message">{{ registerError }}</label>
 

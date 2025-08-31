@@ -1,7 +1,7 @@
 <main class="login-container">
     <h1 class="login-page-title">כניסה למערכת</h1>
     <div class="section-container">
-        <form [formGroup]="loginForm">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
             <mat-form-field>
                 <mat-label class="placeholder">שם משתמש</mat-label>
                 <input formControlName="username" matInput>
@@ -14,7 +14,7 @@
                 </button>
             </mat-form-field>
 
-            <button mat-stroked-button class="login-btn" type="button" (click)="login()">התחבר</button>
+            <button mat-stroked-button class="login-btn" type="submit">התחבר</button>
             <label class="login-error">{{ loginError }}</label>
         </form>
 
