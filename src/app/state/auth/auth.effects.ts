@@ -17,8 +17,8 @@ export class AuthEffects {
         ofType(AuthActions.loginActions.request),
         switchMap(({ user }) =>
           of(this.authService.login(user)).pipe(
-            map((success) =>
-              success
+            map((user) =>
+              user
                 ? AuthActions.loginActions.success({ user })
                 : AuthActions.loginActions.failure({
                     error: AUTH_MESSAGES.LOGIN.WRONG_DETAILS,

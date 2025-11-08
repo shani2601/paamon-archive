@@ -32,14 +32,12 @@ export class AuthService {
     }
   }
 
-  login(user: User): boolean {
-    const matchedUser = this.users$.value.find(
+  login(user: User): User | undefined{
+    return (this.users$.value.find(
       (possibleUser) =>
         possibleUser.username === user.username &&
         bcrypt.compareSync(user.password, possibleUser.password)
-    );
-
-    return !!matchedUser;
+    ));
   }
 
   getUsers(): Observable<User[]> {
