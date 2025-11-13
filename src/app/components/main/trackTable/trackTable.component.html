@@ -1,0 +1,10 @@
+<div class="track-table">
+    <mat-form-field class="time-dropdown">
+        <mat-label class="title">זמן לאחור</mat-label>
+        <mat-select>
+            @for (time of filteringTimes; track time) {
+                <mat-option [value]="time.minutes">{{time.label}}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+</div>

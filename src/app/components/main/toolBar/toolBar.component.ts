@@ -7,7 +7,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
     standalone: true,
-    selector: `app-toolBar`,
+    selector: `tool-bar`,
     imports: [AsyncPipe],
     styleUrl: './toolBar.component.css',
     templateUrl: './toolBar.component.html'

@@ -3,13 +3,14 @@
     flex-direction: column;
     height: 100px;
     width: 100%;
-    background-color: rgb(221, 216, 190);
+    background-color: rgb(185, 153, 49);
 }
 
 .app-name-title {
     margin-right: 30px;
     margin-bottom: 0px;
     font-size: xx-large;
+    color: rgb(242, 242, 184);
 }
 
 .welcome-user {
@@ -17,4 +18,5 @@
     margin-right: 30px;
     font-size: medium;
     font-weight: 500;
+    color: rgb(242, 242, 184);
 }

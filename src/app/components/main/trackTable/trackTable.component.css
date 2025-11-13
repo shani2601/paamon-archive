@@ -1,0 +1,12 @@
+.track-table {
+    height: 830px;
+    width: 750px;
+    background-color: rgb(221, 216, 190);
+    display: flex;
+    flex-direction: column;
+}
+
+mat-option {
+  min-height: 28px !important;
+  font-size: 14px;
+}
