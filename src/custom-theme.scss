@@ -37,3 +37,44 @@ input[type="password"]::-ms-clear {
 .mdc-text-field .mat-mdc-form-field-required-marker {
   display: none;
 }
+
+.time-dropdown .mat-mdc-text-field-wrapper {
+  background-color:  rgb(194, 185, 143) !important;
+}
+
+/* צביעה של כל הפאנל */
+.cdk-overlay-pane .time-select-panel.mat-mdc-select-panel.mdc-menu-surface {
+  background-color:  rgb(194, 185, 143) !important;  /* לוודא שגם הרקע עצמו צבוע */
+}
+
+/* צביעה של השורות בפנים */
+.cdk-overlay-pane .time-select-panel .mat-mdc-option.mdc-list-item {
+  background-color: rgb(194, 185, 143) !important;
+}
+
+/* צביעה במעבר עכבר */
+.cdk-overlay-pane .time-select-panel .mat-mdc-option.mdc-list-item:hover,
+.cdk-overlay-pane .time-select-panel .mat-mdc-option.mdc-list-item.mdc-list-item--selected {
+  background-color: #c5bfa1 !important;
+}
+
+/* קו פוקוס */
+.mat-mdc-form-field .mdc-line-ripple::before,
+.mat-mdc-form-field .mdc-line-ripple::after {
+  border-bottom-color: rgb(166, 161, 136) !important;
+}
+
+/* חץ */
+.mat-mdc-select-arrow {
+  color: rgb(69, 66, 66) !important;
+}
+
+/* טקסט */
+.time-dropdown .mat-mdc-floating-label {
+  color: rgb(69, 66, 66) !important;
+}
+
+/* גבול מסביב לכל הפאנל */
+.time-select-panel {
+  border: 1px solid rgb(69, 66, 66) !important;
+}

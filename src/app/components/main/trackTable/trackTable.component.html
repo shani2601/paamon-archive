@@ -1,10 +1,40 @@
-<div class="track-table">
+<div class="track-table-container">
     <mat-form-field class="time-dropdown">
         <mat-label class="title">זמן לאחור</mat-label>
-        <mat-select>
+        <mat-select panelClass="time-select-panel">
             @for (time of filteringTimes; track time) {
                 <mat-option [value]="time.minutes">{{time.label}}</mat-option>
             }
         </mat-select>
     </mat-form-field>
+    <div class="track-table">
+        @for (track of tracks; track track) {
+            <div class="track-container" [id]="track.trackId">
+                <div class="detail" id="track-id">
+                    <label class="field-name">מספר נתיב</label>
+                    <label class="value">{{track.trackId}}</label>
+                </div>
+                <div class="seperator"></div>
+                <div class="detail" id="launch-time">
+                    <label class="field-name">זמן שיגור</label>
+                    <label class="value">{{track.launchTime | date:'HH:mm:ss'}}</label>
+                </div>
+                <div class="seperator"></div>
+                <div class="detail" id="launch-state">
+                    <label class="field-name">מדינת שיגור</label>
+                    <label class="value">{{track.launchState}}</label>
+                </div>
+                <div class="seperator"></div>
+                <div class="detail" id="impact-time">
+                    <label class="field-name">זמן פגיעה</label>
+                    <label class="value">{{track.impactTime | date:'HH:mm:ss'}}</label>
+                </div>
+                <div class="seperator"></div>
+                <div class="detail" id="impact-city">
+                    <label class="field-name">עיר פגיעה</label>
+                    <label class="value">{{track.impactCity}}</label>
+                </div>
+            </div>
+        }
+    </div>
 </div>
