@@ -1,14 +1,14 @@
 <div class="track-table-container">
     <mat-form-field class="time-dropdown">
         <mat-label class="title">זמן לאחור</mat-label>
-        <mat-select panelClass="time-select-panel">
+        <mat-select panelClass="time-select-panel" [(ngModel)]="selectedTime">
             @for (time of filteringTimes; track time) {
-                <mat-option [value]="time.minutes">{{time.label}}</mat-option>
+                <mat-option [value]="time.miliseconds">{{time.label}}</mat-option>
             }
         </mat-select>
     </mat-form-field>
     <div class="track-table">
-        @for (track of tracks; track track) {
+        @for (track of getTracksBySelctedTime(selectedTime); track track) {
             <div class="track-container" [id]="track.trackId">
                 <div class="detail" id="track-id">
                     <label class="field-name">מספר נתיב</label>

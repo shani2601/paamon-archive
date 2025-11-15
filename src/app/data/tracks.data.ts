@@ -24,5 +24,5 @@ function randomDateUpTo3HoursAgo(): number {
 for (const track of Tracks) {
     track.trackId = random10Digits();
     track.launchTime = randomDateUpTo3HoursAgo();
-    track.impactTime = track.launchTime + (1.5 * 1000);
+    track.impactTime = track.launchTime + (90 * 1000);
 }
